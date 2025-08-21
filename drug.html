@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drug Information</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ffffff, #e6e9f0);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 50px;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+.back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 50px;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      transform: translateX(-5px) scale(1.05);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+    }
+
+    .back-btn svg {
+      transition: transform 0.3s ease;
+    }
+
+    .back-btn:hover svg {
+      transform: translateX(-4px);
+    }
+    .back-btn:hover {
+      transform: translateX(-5px) scale(1.05);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+    }
+
+    .back-btn svg {
+      transition: transform 0.3s ease;
+    }
+
+    .back-btn:hover svg {
+      transform: translateX(-4px);
+    }
+
+        /* Header Styling */
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+
+        /* Input Styling */
+        .input-container {
+            position: relative;
+            width: 80%;
+            max-width: 400px;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        input:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+        }
+
+        /* Suggestion Box */
+        .suggestion-box {
+            position: absolute;
+            top: 55px;
+            left: 0;
+            right: 0;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-height: 150px;
+            overflow-y: auto;
+            z-index: 10;
+            display: none;
+        }
+
+        .suggestion-box div {
+            padding: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .suggestion-box div:hover {
+            background-color: #f0f0f5;
+        }
+
+        /* Button */
+        button {
+            padding: 12px 25px;
+            background-color: #007bff;
+            color: white;
+            font-size: 1rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0px 5px 15px rgba(0, 123, 255, 0.3);
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        /* Card Styling */
+        #result {
+            display: none;
+            width: 90%;
+            max-width: 500px;
+            padding: 25px;
+            border-radius: 15px;
+            background: white;
+            color: #333;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+            animation: fadeInUp 0.5s ease-in-out;
+        }
+
+        #result h2 {
+            text-align: center;
+            color: #007bff;
+        }
+
+        #result p {
+            margin: 10px 0;
+            line-height: 1.5;
+        }
+
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <a href="javascript:history.back()" class="back-btn">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" 
+         stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+    Back
+  </a>
+    <h1>Drug Information</h1>
+    <div class="input-container">
+        <input type="text" id="search" placeholder="Enter drug name" oninput="showSuggestions()">
+        <div id="suggestions" class="suggestion-box"></div>
+    </div>
+    <button onclick="searchDrug()">Search</button>
+    <div id="result"></div>
+    <footer>Made by Noor Zaman</footer>
+
+    <script>
+        // Drug Data
+        const drugData = {
+
+    "paracetamol": {
+        "uses": "Reduces fever and relieves mild to moderate pain.",
+        "sideEffects": "Liver damage in overdose, nausea, rash.",
+        "howToUse": "Take 500mg–1g every 4-6 hours as needed."
+    },
+    "ibuprofen": {
+        "uses": "Relieves pain, inflammation, and fever.",
+        "sideEffects": "Stomach upset, heartburn, risk of ulcers.",
+        "howToUse": "Take 200–400mg every 6-8 hours with food."
+    },
+    "aspirin": {
+        "uses": "Relieves pain, fever, inflammation; prevents blood clots.",
+        "sideEffects": "Stomach irritation, bleeding risk, nausea.",
+        "howToUse": "Take 75–325mg daily or as prescribed."
+    },
+    "amoxicillin": {
+        "uses": "Treats bacterial infections of ear, throat, chest, and urinary tract.",
+        "sideEffects": "Diarrhea, nausea, rash.",
+        "howToUse": "Take 500mg every 8 hours or as prescribed."
+    },
+    "azithromycin": {
+        "uses": "Treats bacterial infections like respiratory and skin infections.",
+        "sideEffects": "Diarrhea, nausea, abdominal pain.",
+        "howToUse": "Take 500mg on day 1, then 250mg daily."
+    },
+    "ciprofloxacin": {
+        "uses": "Treats urinary tract, respiratory, and skin infections.",
+        "sideEffects": "Nausea, dizziness, tendon pain.",
+        "howToUse": "Take 500mg every 12 hours."
+    },
+    "doxycycline": {
+        "uses": "Treats bacterial and acne infections, malaria prevention.",
+        "sideEffects": "Sun sensitivity, nausea, diarrhea.",
+        "howToUse": "Take 100mg once or twice daily."
+    },
+    "omeprazole": {
+        "uses": "Reduces stomach acid, treats ulcers and reflux.",
+        "sideEffects": "Headache, nausea, vitamin B12 deficiency.",
+        "howToUse": "Take 20mg once daily before meals."
+    },
+    "pantoprazole": {
+        "uses": "Treats acid reflux, GERD, and ulcers.",
+        "sideEffects": "Diarrhea, headache, vitamin deficiency.",
+        "howToUse": "Take 40mg once daily before food."
+    },
+    "ranitidine": {
+        "uses": "Reduces stomach acid, treats heartburn and ulcers.",
+        "sideEffects": "Headache, constipation, dizziness.",
+        "howToUse": "Take 150mg twice daily."
+    },
+    "atorvastatin": {
+        "uses": "Lowers cholesterol and prevents heart disease.",
+        "sideEffects": "Muscle pain, liver enzyme changes.",
+        "howToUse": "Take 10–40mg once daily at night."
+    },
+    "simvastatin": {
+        "uses": "Reduces cholesterol and prevents heart problems.",
+        "sideEffects": "Muscle weakness, headache, stomach pain.",
+        "howToUse": "Take 10–40mg once daily in evening."
+    },
+    "losartan": {
+        "uses": "Lowers blood pressure and protects kidneys in diabetes.",
+        "sideEffects": "Dizziness, high potassium, fatigue.",
+        "howToUse": "Take 50mg once daily."
+    },
+    "amlodipine": {
+        "uses": "Treats high blood pressure and chest pain (angina).",
+        "sideEffects": "Swelling of ankles, dizziness, headache.",
+        "howToUse": "Take 5–10mg once daily."
+    },
+    "lisinopril": {
+        "uses": "Lowers blood pressure and treats heart failure.",
+        "sideEffects": "Cough, dizziness, high potassium.",
+        "howToUse": "Take 10–40mg once daily."
+    },
+    "metoprolol": {
+        "uses": "Treats high blood pressure, angina, and heart failure.",
+        "sideEffects": "Fatigue, slow heartbeat, dizziness.",
+        "howToUse": "Take 25–100mg once or twice daily."
+    },
+    "propranolol": {
+        "uses": "Controls high blood pressure, anxiety, tremors, migraines.",
+        "sideEffects": "Fatigue, dizziness, cold hands/feet.",
+        "howToUse": "Take 40mg two or three times daily."
+    },
+    "furosemide": {
+        "uses": "Relieves swelling and fluid retention in heart, kidney, or liver disease.",
+        "sideEffects": "Dehydration, low potassium, dizziness.",
+        "howToUse": "Take 20–40mg once or twice daily."
+    },
+    "hydrochlorothiazide": {
+        "uses": "Treats high blood pressure and fluid retention.",
+        "sideEffects": "Low potassium, dizziness, urination increase.",
+        "howToUse": "Take 12.5–25mg once daily."
+    },
+    "spironolactone": {
+        "uses": "Treats heart failure, high blood pressure, and hormonal acne.",
+        "sideEffects": "High potassium, breast tenderness, dizziness.",
+        "howToUse": "Take 25–100mg daily."
+    },
+    "levothyroxine": {
+        "uses": "Treats underactive thyroid (hypothyroidism).",
+        "sideEffects": "Palpitations, weight loss, anxiety (if overdosed).",
+        "howToUse": "Take 50–150mcg once daily in morning before food."
+    },
+    "prednisolone": {
+        "uses": "Reduces inflammation in asthma, arthritis, allergies.",
+        "sideEffects": "Weight gain, mood changes, weak bones.",
+        "howToUse": "Take 5–60mg daily as prescribed."
+    },
+    "hydrocortisone": {
+        "uses": "Treats inflammation, allergies, and adrenal insufficiency.",
+        "sideEffects": "Skin thinning, weight gain, mood changes.",
+        "howToUse": "Take 10–30mg daily in divided doses."
+    },
+    "insulin": {
+        "uses": "Controls blood sugar in diabetes mellitus.",
+        "sideEffects": "Low blood sugar, weight gain.",
+        "howToUse": "Inject subcutaneously as prescribed."
+    },
+    "salbutamol": {
+        "uses": "Relieves asthma and breathing difficulties.",
+        "sideEffects": "Tremors, fast heartbeat, nervousness.",
+        "howToUse": "Inhale 100–200mcg every 4–6 hours as needed."
+    },
+    "budesonide": {
+        "uses": "Reduces inflammation in asthma and bowel diseases.",
+        "sideEffects": "Throat irritation, oral thrush, cough.",
+        "howToUse": "Inhale 200–400mcg daily or as prescribed."
+    },
+    "cetirizine": {
+        "uses": "Relieves allergy symptoms like runny nose, sneezing, itching.",
+        "sideEffects": "Drowsiness, dry mouth, fatigue.",
+        "howToUse": "Take 10mg once daily."
+    },
+    "loratadine": {
+        "uses": "Treats hay fever, allergies, and hives.",
+        "sideEffects": "Headache, dry mouth, drowsiness (rare).",
+        "howToUse": "Take 10mg once daily."
+    },
+    "diphenhydramine": {
+        "uses": "Relieves allergies, hay fever, and insomnia.",
+        "sideEffects": "Drowsiness, dry mouth, dizziness.",
+        "howToUse": "Take 25–50mg every 6–8 hours."
+    },
+    "montelukast": {
+        "uses": "Prevents asthma attacks and relieves allergies.",
+        "sideEffects": "Headache, stomach pain, mood changes.",
+        "howToUse": "Take 10mg once daily in evening."
+    },
+    "fluoxetine": {
+        "uses": "Treats depression, anxiety, and OCD.",
+        "sideEffects": "Insomnia, nausea, headache.",
+        "howToUse": "Take 20–40mg once daily."
+    },
+    "sertraline": {
+        "uses": "Treats depression, panic disorder, and anxiety.",
+        "sideEffects": "Nausea, insomnia, sexual problems.",
+        "howToUse": "Take 50–100mg once daily."
+    },
+    "diazepam": {
+        "uses": "Relieves anxiety, muscle spasms, and seizures.",
+        "sideEffects": "Drowsiness, confusion, dependence risk.",
+        "howToUse": "Take 2–10mg two to four times daily."
+    },
+    "alprazolam": {
+        "uses": "Treats anxiety and panic disorders.",
+        "sideEffects": "Drowsiness, dizziness, dependence.",
+        "howToUse": "Take 0.25–0.5mg two to three times daily."
+    },
+    "zolpidem": {
+        "uses": "Short-term treatment of insomnia.",
+        "sideEffects": "Drowsiness, dizziness, dependence risk.",
+        "howToUse": "Take 5–10mg at bedtime."
+    },
+    "morphine": {
+        "uses": "Relieves severe pain.",
+        "sideEffects": "Drowsiness, constipation, dependence.",
+        "howToUse": "Take 10–30mg every 4 hours as needed."
+    },
+    "tramadol": {
+        "uses": "Relieves moderate to severe pain.",
+        "sideEffects": "Nausea, dizziness, constipation.",
+        "howToUse": "Take 50–100mg every 6 hours as needed."
+    },
+    "acetaminophen-codeine": {
+        "uses": "Relieves moderate pain and cough.",
+        "sideEffects": "Drowsiness, constipation, nausea.",
+        "howToUse": "Take 1 tablet every 4–6 hours as prescribed."
+    },
+    "clopidogrel": {
+        "uses": "Prevents blood clots in heart and stroke patients.",
+        "sideEffects": "Bleeding, stomach upset, bruising.",
+        "howToUse": "Take 75mg once daily."
+    },
+    "warfarin": {
+        "uses": "Prevents and treats blood clots.",
+        "sideEffects": "Bleeding, easy bruising, nausea.",
+        "howToUse": "Take 2–10mg daily as prescribed."
+    },
+    "glimepiride": {
+        "uses": "Controls blood sugar in type 2 diabetes.",
+        "sideEffects": "Low blood sugar, weight gain, dizziness.",
+        "howToUse": "Take 1–4mg once daily before breakfast."
+    },
+    "gliclazide": {
+        "uses": "Lowers blood sugar in type 2 diabetes.",
+        "sideEffects": "Hypoglycemia, headache, stomach upset.",
+        "howToUse": "Take 40–160mg once or twice daily."
+    },
+    "sitagliptin": {
+        "uses": "Improves blood sugar in type 2 diabetes.",
+        "sideEffects": "Headache, sore throat, stomach pain.",
+        "howToUse": "Take 100mg once daily."
+    },
+    "pioglitazone": {
+        "uses": "Improves insulin sensitivity in type 2 diabetes.",
+        "sideEffects": "Weight gain, swelling, heart failure risk.",
+        "howToUse": "Take 15–45mg once daily."
+    },
+    "linagliptin": {
+        "uses": "Controls high blood sugar in type 2 diabetes.",
+        "sideEffects": "Cough, joint pain, low risk of hypoglycemia.",
+        "howToUse": "Take 5mg once daily."
+    },
+    "canagliflozin": {
+        "uses": "Lowers blood sugar by removing glucose via urine.",
+        "sideEffects": "Frequent urination, dehydration, yeast infection.",
+        "howToUse": "Take 100–300mg once daily before first meal."
+    },
+    "dapagliflozin": {
+        "uses": "Treats type 2 diabetes and heart failure.",
+        "sideEffects": "UTIs, dehydration, low blood pressure.",
+        "howToUse": "Take 10mg once daily."
+    },
+    "empagliflozin": {
+        "uses": "Controls blood sugar and protects heart in diabetes.",
+        "sideEffects": "Frequent urination, UTI, dehydration.",
+        "howToUse": "Take 10–25mg once daily."
+    },
+    "rosuvastatin": {
+        "uses": "Lowers cholesterol and prevents heart disease.",
+        "sideEffects": "Muscle pain, headache, constipation.",
+        "howToUse": "Take 5–40mg once daily."
+    },
+    "pravastatin": {
+        "uses": "Lowers cholesterol levels in blood.",
+        "sideEffects": "Muscle aches, nausea, headache.",
+        "howToUse": "Take 10–40mg once daily."
+    },
+    "ezetimibe": {
+        "uses": "Reduces cholesterol absorption in intestine.",
+        "sideEffects": "Stomach pain, diarrhea, fatigue.",
+        "howToUse": "Take 10mg once daily."
+    },
+    "fenofibrate": {
+        "uses": "Lowers triglycerides and cholesterol.",
+        "sideEffects": "Muscle pain, stomach upset, headache.",
+        "howToUse": "Take 145mg once daily with food."
+    },
+    "gemfibrozil": {
+        "uses": "Lowers triglyceride levels in blood.",
+        "sideEffects": "Stomach pain, muscle pain, diarrhea.",
+        "howToUse": "Take 600mg twice daily before meals."
+    },
+    "enalapril": {
+        "uses": "Treats high blood pressure and heart failure.",
+        "sideEffects": "Cough, dizziness, high potassium.",
+        "howToUse": "Take 5–20mg once daily."
+    },
+    "ramipril": {
+        "uses": "Lowers blood pressure and protects heart.",
+        "sideEffects": "Dry cough, dizziness, high potassium.",
+        "howToUse": "Take 2.5–10mg once daily."
+    },
+    "valsartan": {
+        "uses": "Lowers blood pressure and treats heart failure.",
+        "sideEffects": "Dizziness, high potassium, headache.",
+        "howToUse": "Take 80–160mg once daily."
+    },
+    "telmisartan": {
+        "uses": "Controls high blood pressure and prevents strokes.",
+        "sideEffects": "Dizziness, fatigue, back pain.",
+        "howToUse": "Take 40–80mg once daily."
+    },
+    "olmesartan": {
+        "uses": "Lowers blood pressure and protects kidneys.",
+        "sideEffects": "Dizziness, diarrhea, fatigue.",
+        "howToUse": "Take 20–40mg once daily."
+    },
+    "carvedilol": {
+        "uses": "Treats high blood pressure and heart failure.",
+        "sideEffects": "Dizziness, slow heartbeat, fatigue.",
+        "howToUse": "Take 12.5–25mg twice daily."
+    },
+    "bisoprolol": {
+        "uses": "Controls high blood pressure and heart failure.",
+        "sideEffects": "Dizziness, slow pulse, fatigue.",
+        "howToUse": "Take 5–10mg once daily."
+    },
+    "atenolol": {
+        "uses": "Lowers blood pressure and prevents angina.",
+        "sideEffects": "Cold hands, dizziness, fatigue.",
+        "howToUse": "Take 25–100mg once daily."
+    },
+    "diltiazem": {
+        "uses": "Treats high blood pressure and chest pain.",
+        "sideEffects": "Swelling, dizziness, headache.",
+        "howToUse": "Take 120–360mg daily in divided doses."
+    },
+    "verapamil": {
+        "uses": "Treats high blood pressure and arrhythmias.",
+        "sideEffects": "Constipation, dizziness, slow heart rate.",
+        "howToUse": "Take 120–240mg once or twice daily."
+    },
+    "clonidine": {
+        "uses": "Lowers blood pressure and relieves withdrawal symptoms.",
+        "sideEffects": "Drowsiness, dry mouth, dizziness.",
+        "howToUse": "Take 0.1–0.3mg twice daily."
+    },
+    "methyldopa": {
+        "uses": "Treats high blood pressure, especially in pregnancy.",
+        "sideEffects": "Drowsiness, dizziness, dry mouth.",
+        "howToUse": "Take 250–500mg two to three times daily."
+    },
+    "isosorbide mononitrate": {
+        "uses": "Prevents chest pain (angina).",
+        "sideEffects": "Headache, dizziness, low blood pressure.",
+        "howToUse": "Take 20–60mg once daily."
+    },
+    "nitroglycerin": {
+        "uses": "Relieves chest pain due to angina.",
+        "sideEffects": "Headache, flushing, dizziness.",
+        "howToUse": "Place 0.3–0.6mg under tongue during chest pain."
+    },
+    "digoxin": {
+        "uses": "Treats heart failure and irregular heartbeat.",
+        "sideEffects": "Nausea, dizziness, vision changes.",
+        "howToUse": "Take 0.125–0.25mg once daily."
+    },
+    "amiodarone": {
+        "uses": "Treats serious irregular heartbeats.",
+        "sideEffects": "Thyroid issues, lung damage, skin changes.",
+        "howToUse": "Take 200mg once or twice daily."
+    },
+    "phenytoin": {
+        "uses": "Prevents and controls seizures.",
+        "sideEffects": "Dizziness, gum overgrowth, rash.",
+        "howToUse": "Take 100mg two to three times daily."
+    },
+    "valproic acid": {
+        "uses": "Treats epilepsy, bipolar disorder, migraines.",
+        "sideEffects": "Weight gain, hair loss, liver damage.",
+        "howToUse": "Take 500–1000mg daily in divided doses."
+    },
+    "carbamazepine": {
+        "uses": "Treats seizures, nerve pain, and bipolar disorder.",
+        "sideEffects": "Drowsiness, dizziness, rash.",
+        "howToUse": "Take 200–400mg two to four times daily."
+    },
+    "lamotrigine": {
+        "uses": "Treats seizures and bipolar disorder.",
+        "sideEffects": "Rash, dizziness, headache.",
+        "howToUse": "Take 25–200mg once or twice daily."
+    },
+    "levetiracetam": {
+        "uses": "Controls seizures in epilepsy.",
+        "sideEffects": "Drowsiness, irritability, dizziness.",
+        "howToUse": "Take 500–1500mg twice daily."
+    },
+    "gabapentin": {
+        "uses": "Treats nerve pain and seizures.",
+        "sideEffects": "Drowsiness, dizziness, weight gain.",
+        "howToUse": "Take 300–600mg three times daily."
+    },
+    "pregabalin": {
+        "uses": "Treats nerve pain, anxiety, and seizures.",
+        "sideEffects": "Drowsiness, dizziness, weight gain.",
+        "howToUse": "Take 75–150mg twice daily."
+    },
+    "topiramate": {
+        "uses": "Treats epilepsy and prevents migraines.",
+        "sideEffects": "Drowsiness, weight loss, confusion.",
+        "howToUse": "Take 25–100mg twice daily."
+    },
+    "baclofen": {
+        "uses": "Relieves muscle spasms and stiffness.",
+        "sideEffects": "Drowsiness, weakness, dizziness.",
+        "howToUse": "Take 5–20mg three times daily."
+    },
+    "tizanidine": {
+        "uses": "Relieves muscle spasticity and cramps.",
+        "sideEffects": "Drowsiness, dry mouth, dizziness.",
+        "howToUse": "Take 2–6mg two to three times daily."
+    },
+    "cyclobenzaprine": {
+        "uses": "Relieves muscle spasms and stiffness.",
+        "sideEffects": "Drowsiness, dry mouth, dizziness.",
+        "howToUse": "Take 5–10mg three times daily."
+    },
+    "methotrexate": {
+        "uses": "Treats rheumatoid arthritis, psoriasis, cancer.",
+        "sideEffects": "Nausea, liver damage, mouth ulcers.",
+        "howToUse": "Take 7.5–25mg once weekly."
+    },
+    "azathioprine": {
+        "uses": "Suppresses immune system in transplant and autoimmune diseases.",
+        "sideEffects": "Nausea, infections, low blood count.",
+        "howToUse": "Take 50–150mg daily."
+    },
+    "cyclosporine": {
+        "uses": "Prevents organ rejection and treats autoimmune disease.",
+        "sideEffects": "Kidney damage, tremors, gum swelling.",
+        "howToUse": "Take 100–300mg daily in divided doses."
+    },
+    "tacrolimus": {
+        "uses": "Prevents organ rejection after transplant.",
+        "sideEffects": "Kidney problems, tremors, high blood sugar.",
+        "howToUse": "Take 2–6mg daily in divided doses."
+    },
+    "infliximab": {
+        "uses": "Treats rheumatoid arthritis, Crohn’s disease.",
+        "sideEffects": "Infections, headache, nausea.",
+        "howToUse": "Inject IV every 6–8 weeks as prescribed."
+    },
+    "adalimumab": {
+        "uses": "Treats arthritis, psoriasis, Crohn’s disease.",
+        "sideEffects": "Infections, injection site pain, headache.",
+        "howToUse": "Inject 40mg subcutaneously every 2 weeks."
+    },
+    "hydroxychloroquine": {
+        "uses": "Treats malaria, lupus, and rheumatoid arthritis.",
+        "sideEffects": "Eye damage, nausea, headache.",
+        "howToUse": "Take 200–400mg daily."
+    },
+    "chloroquine": {
+        "uses": "Prevents and treats malaria.",
+        "sideEffects": "Nausea, blurred vision, headache.",
+        "howToUse": "Take 300mg weekly for prevention."
+    },
+    "rifampicin": {
+        "uses": "Treats tuberculosis and bacterial infections.",
+        "sideEffects": "Liver damage, red urine, nausea.",
+        "howToUse": "Take 600mg once daily."
+    },
+    "isoniazid": {
+        "uses": "Prevents and treats tuberculosis.",
+        "sideEffects": "Liver problems, nerve damage, nausea.",
+        "howToUse": "Take 300mg once daily."
+    },
+    "ethambutol": {
+        "uses": "Treats tuberculosis as combination therapy.",
+        "sideEffects": "Eye problems, nausea, rash.",
+        "howToUse": "Take 15–25mg/kg once daily."
+    },
+    "pyrazinamide": {
+        "uses": "Treats tuberculosis with other drugs.",
+        "sideEffects": "Liver toxicity, joint pain, nausea.",
+        "howToUse": "Take 20–30mg/kg once daily."
+    },
+    "acyclovir": {
+        "uses": "Treats herpes, shingles, and chickenpox.",
+        "sideEffects": "Nausea, diarrhea, headache.",
+        "howToUse": "Take 400mg three times daily."
+    },
+    "valacyclovir": {
+        "uses": "Treats herpes zoster and genital herpes.",
+        "sideEffects": "Headache, nausea, abdominal pain.",
+        "howToUse": "Take 500–1000mg once or twice daily."
+    },
+    "oseltamivir": {
+        "uses": "Treats and prevents influenza.",
+        "sideEffects": "Nausea, vomiting, headache.",
+        "howToUse": "Take 75mg twice daily for 5 days."
+    },
+    "remdesivir": {
+        "uses": "Treats COVID-19 viral infection.",
+        "sideEffects": "Nausea, liver enzyme changes, headache.",
+        "howToUse": "IV infusion once daily for 5–10 days."
+    }
+
+
+        };
+
+        // Show Suggestions
+        function showSuggestions() {
+            const input = document.getElementById('search').value.toLowerCase();
+            const suggestionsDiv = document.getElementById('suggestions');
+            suggestionsDiv.innerHTML = ''; // Clear previous suggestions
+
+            if (input) {
+                const suggestions = Object.keys(drugData).filter(drug =>
+                    drug.startsWith(input)
+                );
+
+                if (suggestions.length) {
+                    suggestions.forEach(drug => {
+                        const suggestionDiv = document.createElement('div');
+                        suggestionDiv.textContent = drug.charAt(0).toUpperCase() + drug.slice(1);
+                        suggestionDiv.onclick = () => {
+                            document.getElementById('search').value = drug;
+                            suggestionsDiv.style.display = 'none'; // Hide suggestions
+                        };
+                        suggestionsDiv.appendChild(suggestionDiv);
+                    });
+
+                    suggestionsDiv.style.display = 'block'; // Show suggestions
+                } else {
+                    suggestionsDiv.style.display = 'none';
+                }
+            } else {
+                suggestionsDiv.style.display = 'none';
+            }
+        }
+
+        // Search Drug
+        function searchDrug() {
+            const searchQuery = document.getElementById('search').value.toLowerCase();
+            const resultDiv = document.getElementById('result');
+
+            if (drugData[searchQuery]) {
+                const drug = drugData[searchQuery];
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = `
+                    <h2>${searchQuery.charAt(0).toUpperCase() + searchQuery.slice(1)}</h2>
+                    <p><b>Uses:</b> ${drug.uses}</p>
+                    <p><b>Side Effects:</b> ${drug.sideEffects}</p>
+                    <p><b>How to Use:</b> ${drug.howToUse}</p>
+                    <a href="javascript:history.back()" class="back-btn">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" 
+         stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+    Back
+  </a>
+  
+                `;
+            } else {
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = `
+                    <p style="color: #ff4c4c; text-align: center;">
+                        <b>No information found for "${searchQuery}".</b>
+                    </p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

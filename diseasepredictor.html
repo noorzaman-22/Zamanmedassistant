@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disease Predictor</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ffffff, #f0f0f5);
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 50px;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+.back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 50px;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      transform: translateX(-5px) scale(1.05);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+    }
+
+    .back-btn svg {
+      transition: transform 0.3s ease;
+    }
+
+    .back-btn:hover svg {
+      transform: translateX(-4px);
+    }
+    .back-btn:hover {
+      transform: translateX(-5px) scale(1.05);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+    }
+
+    .back-btn svg {
+      transition: transform 0.3s ease;
+    }
+
+    .back-btn:hover svg {
+      transform: translateX(-4px);
+    }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #444;
+        }
+
+        input {
+            width: 80%;
+            max-width: 600px;
+            padding: 15px;
+            font-size: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            outline: none;
+            margin-bottom: 20px;
+        }
+
+        input:focus {
+            border-color: #28a745;
+            box-shadow: 0 0 10px rgba(40, 167, 69, 0.3);
+        }
+
+        button {
+            padding: 12px 25px;
+            background-color: #28a745;
+            color: white;
+            font-size: 1rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0px 5px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        button:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+
+        #result {
+            display: none;
+            width: 90%;
+            max-width: 800px;
+            margin-top: 20px;
+            padding: 25px;
+            border-radius: 15px;
+            background: white;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .disease-card {
+            position: relative;
+            border: 1px solid #ddd;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .severity-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: #dc3545;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+
+        .severity-common {
+            background-color: #ffc107;
+        }
+
+        .severity-mild {
+            background-color: #28a745;
+        }
+
+        .section-title {
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        footer {
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+      <a href="javascript:history.back()" class="back-btn">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" 
+         stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+    Back
+  </a>
+    
+    <h1>Disease Predictor</h1>
+    <input type="text" id="symptom" placeholder="Enter symptoms (comma-separated)">
+    <button onclick="predictDisease()">Predict</button>
+    <div id="result"></div>
+    <footer>Made by NOOR ZAMAN</footer>
+
+    <script>
+        // Disease Data
+        const diseaseData = [
+   
+    {
+        "name": "Asthma",
+        "symptoms": ["wheezing", "shortness of breath", "chest tightness", "coughing"],
+        "description": "A chronic respiratory condition where airways become inflamed and narrow.",
+        "futureRisk": "May cause frequent attacks and reduced lung function.",
+        "severity": "Chronic",
+        "precautions": "Avoid allergens, pollution, and smoking.",
+        "solutions": "Inhalers, medications, and lifestyle modifications."
+    },
+    {
+        "name": "Hypertension",
+        "symptoms": ["headache", "dizziness", "blurred vision", "fatigue"],
+        "description": "A condition where blood pressure remains consistently high.",
+        "futureRisk": "Increases risk of heart attack, stroke, kidney disease.",
+        "severity": "Chronic",
+        "precautions": "Reduce salt, manage stress, regular exercise.",
+        "solutions": "Blood pressure medicines, healthy diet, regular monitoring."
+    },
+    {
+        "name": "Diabetes Mellitus Type 2",
+        "symptoms": ["excessive thirst", "frequent urination", "fatigue", "blurred vision"],
+        "description": "A metabolic disorder where the body does not use insulin properly.",
+        "futureRisk": "May cause kidney failure, nerve damage, heart disease.",
+        "severity": "Chronic",
+        "precautions": "Limit sugar intake, maintain healthy weight.",
+        "solutions": "Medication, insulin (if needed), exercise, diet control."
+    },
+    {
+        "name": "Tuberculosis",
+        "symptoms": ["persistent cough", "night sweats", "weight loss", "fever"],
+        "description": "A bacterial infection that mainly affects the lungs.",
+        "futureRisk": "Can spread to other organs if untreated.",
+        "severity": "Serious",
+        "precautions": "Cover mouth when coughing, avoid close contact.",
+        "solutions": "Long-term antibiotics as prescribed."
+    },
+    {
+        "name": "Pneumonia",
+        "symptoms": ["cough with mucus", "fever", "chest pain", "breathing difficulty"],
+        "description": "Infection that inflames air sacs in lungs, causing fluid buildup.",
+        "futureRisk": "Can lead to respiratory failure in severe cases.",
+        "severity": "Moderate",
+        "precautions": "Vaccination, avoid smoking, maintain hygiene.",
+        "solutions": "Antibiotics, rest, fluids, hospitalization if severe."
+    },
+    {
+        "name": "COVID-19",
+        "symptoms": ["fever", "dry cough", "loss of taste", "breathing difficulty"],
+        "description": "A viral respiratory illness caused by SARS-CoV-2.",
+        "futureRisk": "Can lead to severe lung damage and long COVID symptoms.",
+        "severity": "Variable",
+        "precautions": "Mask, handwashing, vaccination, avoid crowds.",
+        "solutions": "Supportive care, antiviral drugs, oxygen therapy if needed."
+    },
+    {
+        "name": "Hepatitis B",
+        "symptoms": ["yellowing of skin", "dark urine", "fatigue", "abdominal pain"],
+        "description": "A viral infection that attacks the liver.",
+        "futureRisk": "May cause chronic liver damage and cancer.",
+        "severity": "Chronic",
+        "precautions": "Vaccination, avoid sharing needles, safe sex.",
+        "solutions": "Antiviral medicines, liver monitoring, supportive care."
+    },
+    {
+        "name": "Hepatitis C",
+        "symptoms": ["fatigue", "loss of appetite", "nausea", "jaundice"],
+        "description": "A viral infection causing liver inflammation.",
+        "futureRisk": "Can progress to cirrhosis and liver cancer.",
+        "severity": "Chronic",
+        "precautions": "Avoid sharing razors/needles, screen blood transfusions.",
+        "solutions": "Antiviral therapy, regular liver function tests."
+    },
+    {
+        "name": "Malaria",
+        "symptoms": ["fever", "chills", "sweating", "headache"],
+        "description": "A mosquito-borne infectious disease caused by Plasmodium parasites.",
+        "futureRisk": "May cause anemia, brain malaria, death if untreated.",
+        "severity": "Acute",
+        "precautions": "Use mosquito nets, repellents, avoid stagnant water.",
+        "solutions": "Antimalarial drugs, hydration, medical monitoring."
+    },
+    {
+        "name": "Dengue",
+        "symptoms": ["high fever", "severe headache", "joint pain", "rash"],
+        "description": "A viral disease transmitted by Aedes mosquitoes.",
+        "futureRisk": "Can progress to dengue hemorrhagic fever or shock syndrome.",
+        "severity": "Acute",
+        "precautions": "Prevent mosquito bites, remove stagnant water.",
+        "solutions": "Fluids, rest, paracetamol (avoid aspirin/NSAIDs)."
+    },
+    {
+        "name": "Typhoid",
+        "symptoms": ["fever", "abdominal pain", "loss of appetite", "constipation or diarrhea"],
+        "description": "A bacterial infection caused by Salmonella typhi.",
+        "futureRisk": "Intestinal bleeding and perforation if untreated.",
+        "severity": "Serious",
+        "precautions": "Drink clean water, maintain hygiene.",
+        "solutions": "Antibiotics, fluids, balanced diet."
+    },
+    {
+        "name": "Cholera",
+        "symptoms": ["watery diarrhea", "vomiting", "leg cramps", "dehydration"],
+        "description": "A bacterial disease caused by contaminated water/food.",
+        "futureRisk": "Severe dehydration and death within hours if untreated.",
+        "severity": "Acute",
+        "precautions": "Safe drinking water, hand hygiene.",
+        "solutions": "Oral rehydration salts, IV fluids, antibiotics."
+    },
+    {
+        "name": "Leprosy",
+        "symptoms": ["skin patches", "numbness", "weakness", "nerve damage"],
+        "description": "A chronic infectious disease caused by Mycobacterium leprae.",
+        "futureRisk": "Permanent nerve damage and disability.",
+        "severity": "Chronic",
+        "precautions": "Avoid close contact with untreated cases.",
+        "solutions": "Multi-drug therapy (MDT) as prescribed."
+    },
+    {
+        "name": "HIV/AIDS",
+        "symptoms": ["fever", "night sweats", "weight loss", "weak immunity"],
+        "description": "A viral infection that weakens the immune system.",
+        "futureRisk": "Opportunistic infections and cancers.",
+        "severity": "Chronic",
+        "precautions": "Safe sex, avoid sharing needles, regular testing.",
+        "solutions": "Antiretroviral therapy (ART), supportive care."
+    },
+    {
+        "name": "Stroke",
+        "symptoms": ["sudden weakness", "slurred speech", "confusion", "loss of balance"],
+        "description": "A condition where blood supply to brain is interrupted.",
+        "futureRisk": "Paralysis, long-term disability, death.",
+        "severity": "Acute",
+        "precautions": "Control blood pressure, avoid smoking, exercise.",
+        "solutions": "Clot-busting drugs, surgery, rehabilitation."
+    },
+    {
+        "name": "Heart Attack",
+        "symptoms": ["chest pain", "shortness of breath", "nausea", "sweating"],
+        "description": "Occurs when blood flow to heart muscle is blocked.",
+        "futureRisk": "May lead to heart failure or sudden death.",
+        "severity": "Critical",
+        "precautions": "Control cholesterol, avoid smoking, regular exercise.",
+        "solutions": "Emergency medical care, angioplasty, medications."
+    },
+    {
+        "name": "Epilepsy",
+        "symptoms": ["seizures", "loss of awareness", "confusion", "staring spells"],
+        "description": "A neurological disorder causing recurrent seizures.",
+        "futureRisk": "Injury during seizures, memory issues.",
+        "severity": "Chronic",
+        "precautions": "Avoid triggers, regular medicines.",
+        "solutions": "Anti-seizure medications, surgery in severe cases."
+    },
+    {
+        "name": "Parkinson’s Disease",
+        "symptoms": ["tremors", "slow movement", "stiffness", "balance problems"],
+        "description": "A progressive neurological disorder affecting movement.",
+        "futureRisk": "Worsening disability and complications.",
+        "severity": "Chronic",
+        "precautions": "Exercise, healthy diet, regular checkups.",
+        "solutions": "Medications (levodopa), physiotherapy, surgery."
+    },
+    {
+        "name": "Alzheimer’s Disease",
+        "symptoms": ["memory loss", "confusion", "difficulty speaking", "behavioral changes"],
+        "description": "A progressive brain disorder leading to dementia.",
+        "futureRisk": "Complete dependency and severe memory loss.",
+        "severity": "Chronic",
+        "precautions": "Brain exercises, healthy lifestyle.",
+        "solutions": "Medications, memory training, supportive care."
+    },
+    {
+        "name": "Migraine",
+        "symptoms": ["headache", "nausea", "sensitivity to light", "fatigue", "dizziness"],
+        "description": "A neurological condition causing severe headaches and sensitivity to light or sound.",
+        "futureRisk": "May lead to chronic migraines and impact daily life if unmanaged.",
+        "severity": "Mild",
+        "precautions": "Avoid triggers, stay in dark quiet rooms.",
+        "solutions": "Painkillers, relaxation techniques, consult a neurologist."
+    },
+
+    {
+        "name": "Anemia",
+        "symptoms": ["fatigue", "pale skin", "dizziness", "shortness of breath"],
+        "description": "A condition where the body lacks enough healthy red blood cells.",
+        "futureRisk": "Can lead to heart problems and poor immunity.",
+        "severity": "Moderate",
+        "precautions": "Eat iron-rich foods, regular check-ups.",
+        "solutions": "Iron supplements, vitamin B12, blood transfusion if severe."
+    },
+    {
+        "name": "Leukemia",
+        "symptoms": ["fever", "frequent infections", "fatigue", "easy bruising"],
+        "description": "A type of blood cancer affecting white blood cells.",
+        "futureRisk": "Life-threatening without treatment.",
+        "severity": "Critical",
+        "precautions": "Avoid infections, follow treatment plan.",
+        "solutions": "Chemotherapy, radiation, bone marrow transplant."
+    },
+    {
+        "name": "Lymphoma",
+        "symptoms": ["swollen lymph nodes", "fever", "night sweats", "weight loss"],
+        "description": "A cancer that begins in lymphocytes of the immune system.",
+        "futureRisk": "May spread to other organs if untreated.",
+        "severity": "Serious",
+        "precautions": "Healthy lifestyle, avoid infections.",
+        "solutions": "Chemotherapy, radiation, immunotherapy."
+    },
+    {
+        "name": "Brain Tumor",
+        "symptoms": ["headaches", "seizures", "vision changes", "nausea"],
+        "description": "An abnormal growth of cells in the brain.",
+        "futureRisk": "Can cause neurological damage or death.",
+        "severity": "Critical",
+        "precautions": "Regular screening if high risk.",
+        "solutions": "Surgery, chemotherapy, radiation therapy."
+    },
+    {
+        "name": "Kidney Stones",
+        "symptoms": ["severe back pain", "blood in urine", "frequent urination"],
+        "description": "Hard deposits formed in kidneys from minerals and salts.",
+        "futureRisk": "May cause urinary tract obstruction and infection.",
+        "severity": "Moderate",
+        "precautions": "Drink plenty of water, reduce salt intake.",
+        "solutions": "Pain relievers, lithotripsy, surgery if needed."
+    },
+    {
+        "name": "Chronic Kidney Disease",
+        "symptoms": ["fatigue", "swelling", "nausea", "urine changes"],
+        "description": "Gradual loss of kidney function over time.",
+        "futureRisk": "Can lead to kidney failure requiring dialysis.",
+        "severity": "Chronic",
+        "precautions": "Control blood sugar and blood pressure.",
+        "solutions": "Diet management, dialysis, kidney transplant."
+    },
+    {
+        "name": "Gallstones",
+        "symptoms": ["abdominal pain", "nausea", "indigestion", "vomiting"],
+        "description": "Hardened deposits that form in the gallbladder.",
+        "futureRisk": "Can block bile ducts and cause infection.",
+        "severity": "Moderate",
+        "precautions": "Maintain healthy weight, avoid fatty foods.",
+        "solutions": "Surgery, medications to dissolve stones."
+    },
+    {
+        "name": "Pancreatitis",
+        "symptoms": ["severe abdominal pain", "fever", "nausea", "vomiting"],
+        "description": "Inflammation of the pancreas, acute or chronic.",
+        "futureRisk": "Can damage pancreas and affect digestion.",
+        "severity": "Serious",
+        "precautions": "Avoid alcohol, fatty meals.",
+        "solutions": "Hospitalization, IV fluids, pain control, surgery if needed."
+    },
+    {
+        "name": "Gastritis",
+        "symptoms": ["stomach pain", "nausea", "vomiting", "bloating"],
+        "description": "Inflammation of the stomach lining.",
+        "futureRisk": "Can lead to ulcers and bleeding.",
+        "severity": "Mild",
+        "precautions": "Avoid alcohol, spicy foods, NSAIDs.",
+        "solutions": "Antacids, proton pump inhibitors, antibiotics if H. pylori."
+    },
+    {
+        "name": "Peptic Ulcer",
+        "symptoms": ["burning stomach pain", "indigestion", "bloating", "nausea"],
+        "description": "Sores that develop on the lining of stomach or small intestine.",
+        "futureRisk": "Can cause bleeding and perforation.",
+        "severity": "Serious",
+        "precautions": "Avoid smoking, alcohol, stress.",
+        "solutions": "Proton pump inhibitors, antibiotics if bacterial."
+    },
+    {
+        "name": "Celiac Disease",
+        "symptoms": ["diarrhea", "bloating", "weight loss", "fatigue"],
+        "description": "An autoimmune disorder triggered by gluten ingestion.",
+        "futureRisk": "Leads to malnutrition and intestinal damage.",
+        "severity": "Chronic",
+        "precautions": "Avoid all gluten-containing foods.",
+        "solutions": "Strict gluten-free diet."
+    },
+    {
+        "name": "Crohn’s Disease",
+        "symptoms": ["diarrhea", "abdominal cramps", "weight loss", "fatigue"],
+        "description": "A type of inflammatory bowel disease.",
+        "futureRisk": "Can cause bowel obstruction and malnutrition.",
+        "severity": "Chronic",
+        "precautions": "Avoid trigger foods, stress management.",
+        "solutions": "Anti-inflammatory drugs, surgery in severe cases."
+    },
+    {
+        "name": "Ulcerative Colitis",
+        "symptoms": ["bloody diarrhea", "abdominal pain", "fatigue", "weight loss"],
+        "description": "A chronic disease causing inflammation of the colon lining.",
+        "futureRisk": "Increases risk of colon cancer.",
+        "severity": "Chronic",
+        "precautions": "Avoid trigger foods, regular checkups.",
+        "solutions": "Medication, surgery in severe cases."
+    },
+    {
+        "name": "Appendicitis",
+        "symptoms": ["severe abdominal pain", "fever", "loss of appetite", "nausea"],
+        "description": "Inflammation of the appendix, often requiring surgery.",
+        "futureRisk": "Appendix rupture causing life-threatening infection.",
+        "severity": "Critical",
+        "precautions": "No major prevention; seek early medical care.",
+        "solutions": "Surgical removal of appendix."
+    },
+    {
+        "name": "Psoriasis",
+        "symptoms": ["red patches", "itchy skin", "scaly plaques", "joint pain"],
+        "description": "A chronic autoimmune skin disorder.",
+        "futureRisk": "Can lead to psoriatic arthritis.",
+        "severity": "Chronic",
+        "precautions": "Avoid triggers like stress and smoking.",
+        "solutions": "Topical creams, phototherapy, immunosuppressants."
+    },
+    {
+        "name": "Eczema",
+        "symptoms": ["itchy skin", "redness", "dry patches", "swelling"],
+        "description": "A chronic skin condition causing inflammation and itching.",
+        "futureRisk": "May lead to skin infections.",
+        "severity": "Mild",
+        "precautions": "Avoid harsh soaps, allergens, and scratching.",
+        "solutions": "Moisturizers, antihistamines, corticosteroids."
+    },
+    {
+        "name": "Acne",
+        "symptoms": ["pimples", "oily skin", "blackheads", "scarring"],
+        "description": "A skin condition caused by clogged pores and bacteria.",
+        "futureRisk": "Can leave permanent scars if untreated.",
+        "severity": "Mild",
+        "precautions": "Maintain facial hygiene, avoid oily foods.",
+        "solutions": "Topical creams, antibiotics, retinoids."
+    },
+    {
+        "name": "Chickenpox",
+        "symptoms": ["itchy rash", "blisters", "fever", "fatigue"],
+        "description": "A contagious viral infection caused by varicella-zoster virus.",
+        "futureRisk": "May cause shingles later in life.",
+        "severity": "Mild",
+        "precautions": "Vaccination, avoid contact with infected individuals.",
+        "solutions": "Rest, antihistamines, calamine lotion."
+    },
+    {
+        "name": "Measles",
+        "symptoms": ["rash", "fever", "cough", "red eyes"],
+        "description": "A highly contagious viral disease affecting children mostly.",
+        "futureRisk": "Can cause pneumonia, brain inflammation.",
+        "severity": "Serious",
+        "precautions": "Vaccination (MMR), maintain hygiene.",
+        "solutions": "Supportive care, vitamin A supplements."
+    },
+    {
+        "name": "Mumps",
+        "symptoms": ["swollen salivary glands", "fever", "headache", "muscle aches"],
+        "description": "A viral infection causing swelling of parotid glands.",
+        "futureRisk": "Can lead to infertility in males.",
+        "severity": "Moderate",
+        "precautions": "Vaccination (MMR), avoid close contact.",
+        "solutions": "Rest, fluids, painkillers."
+    },
+
+  {
+    "name": "Tuberculosis",
+    "symptoms": ["chronic cough", "coughing blood", "night sweats", "fever", "weight loss", "fatigue"],
+    "description": "A bacterial infection mainly affecting lungs but can spread to other organs.",
+    "futureRisk": "Can cause lung damage, spread to others, become drug-resistant.",
+    "severity": "Serious",
+    "precautions": "BCG vaccination, avoid close contact with infected.",
+    "solutions": "Long-term antibiotics (6-9 months)."
+  },
+  {
+    "name": "Typhoid Fever",
+    "symptoms": ["high fever", "stomach pain", "constipation", "rash", "headache", "weakness"],
+    "description": "A bacterial infection caused by Salmonella typhi.",
+    "futureRisk": "Can cause intestinal bleeding or perforation.",
+    "severity": "Serious",
+    "precautions": "Drink clean water, maintain hygiene.",
+    "solutions": "Antibiotics, fluids, proper nutrition."
+  },
+  {
+    "name": "Dengue Fever",
+    "symptoms": ["high fever", "severe headache", "joint pain", "rash", "bleeding gums", "low platelet count"],
+    "description": "A viral infection transmitted by Aedes mosquitoes.",
+    "futureRisk": "Can lead to dengue hemorrhagic fever or shock syndrome.",
+    "severity": "Critical",
+    "precautions": "Avoid mosquito bites, remove stagnant water.",
+    "solutions": "Supportive care, hydration, monitoring platelets."
+  },
+  {
+    "name": "Malaria",
+    "symptoms": ["fever", "chills", "sweating", "nausea", "vomiting", "muscle pain"],
+    "description": "A parasitic infection transmitted by Anopheles mosquitoes.",
+    "futureRisk": "Can cause organ failure and death if untreated.",
+    "severity": "Serious",
+    "precautions": "Mosquito nets, repellents, prophylactic drugs.",
+    "solutions": "Antimalarial medications."
+  },
+  {
+    "name": "Cholera",
+    "symptoms": ["watery diarrhea", "vomiting", "dehydration", "low blood pressure", "leg cramps"],
+    "description": "A bacterial infection of the intestine caused by Vibrio cholerae.",
+    "futureRisk": "Severe dehydration leading to shock and death.",
+    "severity": "Critical",
+    "precautions": "Clean drinking water, proper sanitation.",
+    "solutions": "ORS, IV fluids, antibiotics."
+  },
+  {
+    "name": "Leprosy",
+    "symptoms": ["skin patches", "loss of sensation", "nerve damage", "muscle weakness"],
+    "description": "A chronic bacterial disease caused by Mycobacterium leprae.",
+    "futureRisk": "Can cause permanent disability if untreated.",
+    "severity": "Chronic",
+    "precautions": "Avoid close contact with untreated patients.",
+    "solutions": "Multidrug therapy (MDT)."
+  },
+  {
+    "name": "Hepatitis A",
+    "symptoms": ["fatigue", "jaundice", "dark urine", "abdominal pain", "nausea", "fever"],
+    "description": "A viral infection of the liver transmitted by contaminated food or water.",
+    "futureRisk": "Usually acute but can cause liver complications.",
+    "severity": "Moderate",
+    "precautions": "Vaccination, hygiene.",
+    "solutions": "Supportive care, rest, hydration."
+  },
+  {
+    "name": "Hepatitis B",
+    "symptoms": ["jaundice", "loss of appetite", "joint pain", "fatigue", "abdominal discomfort"],
+    "description": "A viral infection of the liver spread by blood and body fluids.",
+    "futureRisk": "Can cause liver cirrhosis or cancer.",
+    "severity": "Serious",
+    "precautions": "Vaccination, safe sex, avoid sharing needles.",
+    "solutions": "Antiviral drugs, monitoring."
+  },
+  {
+    "name": "Hepatitis C",
+    "symptoms": ["fatigue", "jaundice", "easy bruising", "dark urine", "joint pain"],
+    "description": "A viral liver infection mainly spread by blood.",
+    "futureRisk": "Chronic infection leading to liver cancer.",
+    "severity": "Chronic",
+    "precautions": "Screening, avoid blood exposure.",
+    "solutions": "Direct-acting antiviral medications."
+  },
+  {
+    "name": "HIV/AIDS",
+    "symptoms": ["fever", "night sweats", "weight loss", "recurrent infections", "skin rashes"],
+    "description": "A viral disease that weakens the immune system.",
+    "futureRisk": "Opportunistic infections and cancers.",
+    "severity": "Critical",
+    "precautions": "Safe sex, avoid sharing needles, regular testing.",
+    "solutions": "Antiretroviral therapy (ART)."
+  },
+  {
+    "name": "Syphilis",
+    "symptoms": ["painless sores", "rash on palms/soles", "fever", "swollen lymph nodes"],
+    "description": "A sexually transmitted bacterial infection.",
+    "futureRisk": "Can affect brain, heart, and nerves.",
+    "severity": "Serious",
+    "precautions": "Safe sex, regular checkups.",
+    "solutions": "Antibiotics (penicillin)."
+  },
+  {
+    "name": "Gonorrhea",
+    "symptoms": ["painful urination", "discharge", "pelvic pain", "swollen testicles"],
+    "description": "A bacterial sexually transmitted disease.",
+    "futureRisk": "Can cause infertility.",
+    "severity": "Moderate",
+    "precautions": "Safe sex, screening.",
+    "solutions": "Antibiotics."
+  },
+  {
+    "name": "Chlamydia",
+    "symptoms": ["painful urination", "abdominal pain", "discharge", "pelvic pain"],
+    "description": "A common bacterial sexually transmitted disease.",
+    "futureRisk": "Can cause infertility and pelvic inflammatory disease.",
+    "severity": "Moderate",
+    "precautions": "Safe sex, regular testing.",
+    "solutions": "Antibiotics."
+  },
+  {
+    "name": "Rabies",
+    "symptoms": ["fever", "hydrophobia", "hallucinations", "agitation", "paralysis"],
+    "description": "A viral disease transmitted through animal bites.",
+    "futureRisk": "Almost always fatal once symptoms appear.",
+    "severity": "Critical",
+    "precautions": "Vaccination, immediate wound cleaning.",
+    "solutions": "Post-exposure prophylaxis."
+  },
+  {
+    "name": "Polio",
+    "symptoms": ["fever", "muscle stiffness", "paralysis", "fatigue"],
+    "description": "A viral infection affecting the nervous system.",
+    "futureRisk": "Can cause permanent paralysis.",
+    "severity": "Serious",
+    "precautions": "Polio vaccination.",
+    "solutions": "Supportive therapy, physiotherapy."
+  },
+  {
+    "name": "Whooping Cough (Pertussis)",
+    "symptoms": ["severe coughing fits", "vomiting after cough", "runny nose", "fever"],
+    "description": "A bacterial infection causing violent coughing.",
+    "futureRisk": "Can cause pneumonia or seizures in children.",
+    "severity": "Serious",
+    "precautions": "DTaP vaccination.",
+    "solutions": "Antibiotics, supportive care."
+  },
+  {
+    "name": "Tetanus",
+    "symptoms": ["jaw stiffness", "muscle spasms", "difficulty swallowing", "fever"],
+    "description": "A bacterial infection from Clostridium tetani toxin.",
+    "futureRisk": "Life-threatening muscle paralysis.",
+    "severity": "Critical",
+    "precautions": "Tetanus vaccination, wound care.",
+    "solutions": "Antitoxin, antibiotics, supportive care."
+  },
+  {
+    "name": "Influenza",
+    "symptoms": ["fever", "body aches", "runny nose", "cough", "sore throat", "chills"],
+    "description": "A viral infection affecting the respiratory system.",
+    "futureRisk": "Can lead to pneumonia, bronchitis.",
+    "severity": "Mild to Serious",
+    "precautions": "Annual vaccination, hygiene.",
+    "solutions": "Antiviral drugs, rest, fluids."
+  },
+  {
+    "name": "COVID-19",
+    "symptoms": ["fever", "dry cough", "shortness of breath", "loss of taste/smell", "fatigue"],
+    "description": "A viral respiratory disease caused by SARS-CoV-2.",
+    "futureRisk": "Can cause pneumonia, blood clots, long-COVID.",
+    "severity": "Varies",
+    "precautions": "Vaccination, mask-wearing, hygiene.",
+    "solutions": "Antivirals, oxygen support, rest."
+  },
+  {
+    "name": "Zika Virus",
+    "symptoms": ["fever", "rash", "joint pain", "conjunctivitis", "muscle pain"],
+    "description": "A mosquito-borne viral disease.",
+    "futureRisk": "Birth defects in pregnant women.",
+    "severity": "Moderate",
+    "precautions": "Avoid mosquito bites.",
+    "solutions": "Supportive care."
+  },
+
+ 
+
+        ];
+
+        // Predict Disease
+        function predictDisease() {
+            const symptomQuery = document.getElementById('symptom').value.toLowerCase();
+            const resultDiv = document.getElementById('result');
+            const inputSymptoms = symptomQuery.split(',').map(s => s.trim());
+
+            const matchedDiseases = diseaseData.map(disease => {
+                const matchingSymptoms = disease.symptoms.filter(symptom =>
+                    inputSymptoms.includes(symptom)
+                );
+                const otherSymptoms = disease.symptoms.filter(symptom =>
+                    !inputSymptoms.includes(symptom)
+                );
+                return {
+                    ...disease,
+                    matchCount: matchingSymptoms.length,
+                    matchingSymptoms,
+                    otherSymptoms
+                };
+            }).filter(disease => disease.matchCount > 0); // Allow diseases with at least one symptom
+
+            if (matchedDiseases.length > 0) {
+                let resultHTML = `<h2>Disease Prediction</h2>`;
+                matchedDiseases.sort((a, b) => b.matchCount - a.matchCount).forEach(disease => {
+                    const severityClass = disease.severity.toLowerCase() === "serious" ? "severity-badge" :
+                        disease.severity.toLowerCase() === "common" ? "severity-badge severity-common" :
+                        "severity-badge severity-mild";
+                    resultHTML += `
+                        <div class="disease-card">
+                            <div class="${severityClass}">${disease.severity}</div>
+                            <p><b>Disease:</b> ${disease.name}</p>
+                            <p><b>Description:</b> ${disease.description}</p>
+                            <p><b>Matching Symptoms:</b> ${disease.matchingSymptoms.join(', ')}</p>
+                            <p><b>Other Symptoms:</b> ${disease.otherSymptoms.join(', ')}</p>
+                            <p><b>Future Risks:</b> ${disease.futureRisk}</p>
+                            <p class="section-title">Precautions:</p>
+                            <p>${disease.precautions}</p>
+                            <p class="section-title">Solutions:</p>
+                            <p>${disease.solutions}</p>
+                        </div>
+                    `;
+                });
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = resultHTML;
+            } else {
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = `
+                    <p style="color: #dc3545; text-align: center;">
+                        <b>No diseases found matching the entered symptoms.</b>
+                    </p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

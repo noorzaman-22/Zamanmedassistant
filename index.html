@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Medical Assistant</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 2rem;
+            color: #007BFF;
+            margin: 0;
+        }
+
+        .menu {
+            position: relative;
+        }
+
+        .menu button {
+            background: linear-gradient(135deg, #50C878, #007BFF);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s ease;
+            outline: none;
+        }
+
+        .menu button:hover {
+            background: linear-gradient(135deg, #007BFF, #50C878);
+            transform: scale(1.1);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .menu button:focus {
+            outline: none;
+            box-shadow: 0 0 15px #50C878;
+        }
+
+        .menu-items {
+            display: none;
+            position: absolute;
+            top: 70px;
+            right: 0;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            z-index: 1000;
+        }
+
+        .menu-items a {
+            display: block;
+            padding: 15px 30px;
+            text-decoration: none;
+            font-size: 1rem;
+            color: #007BFF;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .menu-items a:hover {
+            background: #007BFF;
+            color: white;
+        }
+
+        .menu.open .menu-items {
+            display: block;
+        }
+
+        main {
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .intro {
+            margin-bottom: 40px;
+        }
+
+        .intro h2 {
+            font-size: 2.5rem;
+            color: #333;
+        }
+
+        .intro p {
+            font-size: 1.2rem;
+            color: #555;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            padding: 20px;
+            border-radius: 15px;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: #50C878;
+        }
+
+        .card p {
+            font-size: 1rem;
+            color: #555;
+            margin-bottom: 0;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Medical Assistant</h1>
+        <div class="menu">
+            <button id="menu-button">Menu</button>
+            <div class="menu-items" id="menu-items">
+                <a href="drug.html">Drug Info</a>
+                <a href="disease.html">Disease info</a>
+                <a href="diseasepredictor.html">Disease Predictor</a>
+                <a href="solutions.html">Solutions</a>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="intro">
+            <h2>Welcome to Medical Assistant</h2>
+            <p>Your one-stop solution for drug information, disease prediction, and remedies.</p>
+        </div>
+        <div class="cards">
+            <div class="card">
+                <h3>Drug Info</h3>
+                <p>Find detailed information on drugs, including uses, side effects, and precautions.</p>
+            </div>
+            <div class="card">
+                <h3>Disease Info</h3>
+                <p>Find detailed information on disease, there symptons and precautions.</p>
+            </div>
+            <div class="card">
+                <h3>Disease Predictor</h3>
+                <p>Input symptoms and get accurate predictions for potential diseases with recommended steps.</p>
+            </div>
+            <div class="card">
+                <h3>Solutions</h3>
+                <p>Explore home remedies and practical solutions for common diseases, carefully curated for you.</p>
+            </div>
+        </div>
+    </main>
+    <script>
+        const menuButton = document.getElementById("menu-button");
+        const menuItems = document.getElementById("menu-items");
+        let menuOpen = false;
+
+        menuButton.addEventListener("click", () => {
+            menuOpen = !menuOpen;
+            if (menuOpen) {
+                menuItems.style.display = "block";
+            } else {
+                menuItems.style.display = "none";
+            }
+        });
+
+        // Close menu if clicking outside
+        document.addEventListener("click", (e) => {
+            if (!menuButton.contains(e.target) && !menuItems.contains(e.target)) {
+                menuItems.style.display = "none";
+                menuOpen = false;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solutions for Diseases</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #fdf3e3, #ffffff);
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: #d17a22;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 80%;
+            max-width: 600px;
+            padding: 15px;
+            font-size: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            outline: none;
+        }
+        back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 50px;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+.back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 50px;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      transform: translateX(-5px) scale(1.05);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+    }
+
+    .back-btn svg {
+      transition: transform 0.3s ease;
+    }
+
+    .back-btn:hover svg {
+      transform: translateX(-4px);
+    }
+    .back-btn:hover {
+      transform: translateX(-5px) scale(1.05);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+    }
+
+    .back-btn svg {
+      transition: transform 0.3s ease;
+    }
+
+    .back-btn:hover svg {
+      transform: translateX(-4px);
+    }
+button {
+    background-color: #4CAF50; /* Green color */
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 12px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.5); /* Initial subtle glow */
+}
+
+button:hover {
+    background-color: #388E3C; /* Darker green on hover */
+    box-shadow: 0 0 20px rgba(76, 175, 80, 1); /* Brighter glow on hover */
+}
+
+button:focus {
+    outline: none;
+    box-shadow: 0 0 25px rgba(76, 175, 80, 1); /* Stronger glow on focus */
+}
+        input:focus {
+            border-color: #d17a22;
+            box-shadow: 0 0 10px rgba(209, 122, 34, 0.3);
+        }
+
+        .suggestions {
+            max-width: 600px;
+            margin: 10px auto;
+            padding: 0;
+            list-style: none;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background: #ffffff;
+            text-align: left;
+            display: none;
+            overflow: hidden;
+        }
+
+        .suggestions li {
+            padding: 10px 15px;
+            cursor: pointer;
+        }
+
+        .suggestions li:hover {
+            background: #f4f4f4;
+        }
+
+        .solution-card {
+            display: none;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 15px;
+            background: #ffffff;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: left;
+        }
+
+        .solution-card.active {
+            display: block;
+        }
+
+        .solution-card h2 {
+            font-size: 1.5rem;
+            color: #d17a22;
+            margin-bottom: 10px;
+        }
+
+        .solution-card ul {
+            padding-left: 20px;
+            list-style: disc;
+        }
+
+        .note {
+            color: #e63946;
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        footer {
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body> <a href="javascript:history.back()" class="back-btn">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" 
+         stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+    Back
+  </a>
+    <h1>Home Remedies for Common Diseases</h1>
+    <p class="note"><b>Note:</b> We are not suggesting drugs as they may cause severe side effects. Consult a doctor for accurate treatment.</p>
+    <input type="text" id="search" placeholder="Search for a disease..." oninput="showSuggestions()">
+    <ul id="suggestions" class="suggestions"></ul>
+    <div id="solution-card" class="solution-card"></div>
+    <footer>Made by NOOR ZAMAN</footer>
+
+    <script>
+        // Data for 20 diseases
+        const diseaseSolutions = [
+      
+  { "name": "Asthma", "solutions": ["Inhale steam with a few drops of eucalyptus oil.", "Drink ginger tea to reduce airway inflammation.", "Practice deep breathing exercises daily."] },
+  { "name": "Diabetes", "solutions": ["Drink bitter gourd juice in the morning.", "Consume fenugreek seeds soaked overnight.", "Include cinnamon powder in your diet."] },
+  { "name": "High Blood Pressure", "solutions": ["Eat garlic cloves raw or in food.", "Drink hibiscus tea regularly.", "Practice meditation and yoga for relaxation."] },
+  { "name": "Cold", "solutions": ["Drink warm water with honey and ginger.", "Inhale steam with tulsi leaves.", "Rest well and keep hydrated."] },
+  { "name": "Cough", "solutions": ["Take a spoonful of honey with black pepper.", "Drink turmeric milk at night.", "Sip warm ginger tea."] },
+  { "name": "Fever", "solutions": ["Drink tulsi and black pepper tea.", "Apply a cool cloth on forehead.", "Stay hydrated with coconut water."] },
+  { "name": "Anemia", "solutions": ["Eat beetroot and pomegranate daily.", "Consume jaggery with sesame seeds.", "Include spinach in meals."] },
+  { "name": "Acidity", "solutions": ["Drink cold milk without sugar.", "Chew a few basil leaves after meals.", "Drink fennel seed water."] },
+  { "name": "Obesity", "solutions": ["Drink warm water with lemon and honey.", "Eat fiber-rich foods like oats and vegetables.", "Exercise or walk daily."] },
+  { "name": "Insomnia", "solutions": ["Drink warm milk before bed.", "Practice meditation and deep breathing.", "Avoid caffeine in the evening."] },
+  { "name": "Sinusitis", "solutions": ["Inhale steam with eucalyptus oil.", "Drink ginger and turmeric tea.", "Apply warm compress on face."] },
+  { "name": "Toothache", "solutions": ["Apply clove oil on the affected tooth.", "Rinse mouth with warm salt water.", "Chew raw garlic for antibacterial effects."] },
+  { "name": "Headache", "solutions": ["Massage forehead with peppermint oil.", "Drink ginger tea for relief.", "Apply a cold compress on head."] },
+  { "name": "Indigestion", "solutions": ["Drink warm water with lemon juice.", "Chew fennel seeds after meals.", "Drink ginger tea."] },
+  { "name": "Kidney Stones", "solutions": ["Drink plenty of coconut water.", "Take lemon juice with olive oil.", "Stay hydrated with plain water."] },
+  { "name": "Joint Pain", "solutions": ["Massage with warm sesame oil.", "Drink turmeric milk.", "Include omega-3 fatty acids in diet."] },
+  { "name": "Back Pain", "solutions": ["Apply hot compress on the area.", "Do light yoga stretches.", "Massage with mustard oil."] },
+  { "name": "Allergy", "solutions": ["Drink nettle tea for natural antihistamine effect.", "Consume raw local honey.", "Keep away from dust and pollen."] },
+  { "name": "Gout", "solutions": ["Drink cherry juice to reduce uric acid.", "Avoid red meat and alcohol.", "Apply cold compress on joints."] },
+  { "name": "Acne", "solutions": ["Apply neem paste on pimples.", "Wash face with aloe vera gel.", "Drink plenty of water."] },
+  { "name": "Hair Fall", "solutions": ["Massage scalp with warm coconut oil.", "Apply onion juice on scalp.", "Eat amla regularly."] },
+  { "name": "Dandruff", "solutions": ["Apply lemon juice on scalp.", "Massage with neem oil.", "Use aloe vera gel."] },
+  { "name": "Dry Skin", "solutions": ["Apply coconut oil after bath.", "Use honey as a natural moisturizer.", "Drink plenty of water."] },
+  { "name": "Sunburn", "solutions": ["Apply aloe vera gel on skin.", "Use cold milk compress.", "Stay hydrated and avoid sunlight."] },
+  { "name": "Burns", "solutions": ["Apply honey on the burn.", "Use aloe vera gel for soothing.", "Rinse with cool water immediately."] },
+  { "name": "Diarrhea", "solutions": ["Drink rice water.", "Eat bananas and curd.", "Stay hydrated with ORS."] },
+  { "name": "Stomach Ulcer", "solutions": ["Drink cabbage juice daily.", "Eat banana to coat stomach lining.", "Avoid spicy and oily food."] },
+  { "name": "Thyroid Issues", "solutions": ["Eat walnuts and pumpkin seeds.", "Consume seaweed in moderation.", "Practice yoga for metabolism."] },
+  { "name": "PCOS", "solutions": ["Drink spearmint tea daily.", "Exercise regularly.", "Avoid processed sugar."] },
+  { "name": "Menstrual Cramps", "solutions": ["Drink ginger tea with honey.", "Apply hot water bag on abdomen.", "Do light yoga stretches."] },
+  { "name": "UTI", "solutions": ["Drink cranberry juice.", "Drink plenty of water.", "Take probiotics like curd."] },
+  { "name": "Depression", "solutions": ["Practice meditation daily.", "Exercise to release endorphins.", "Eat omega-3 rich foods."] },
+  { "name": "Stress", "solutions": ["Practice deep breathing exercises.", "Drink chamomile tea.", "Take breaks and rest well."] },
+  { "name": "Fatigue", "solutions": ["Drink ginseng tea.", "Eat iron-rich foods.", "Sleep 7–8 hours daily."] },
+  { "name": "Low Immunity", "solutions": ["Eat amla or gooseberry daily.", "Drink turmeric milk.", "Consume citrus fruits regularly."] },
+  { "name": "Dehydration", "solutions": ["Drink coconut water.", "Sip lemon water with salt and sugar.", "Eat water-rich fruits like watermelon."] },
+  { "name": "Motion Sickness", "solutions": ["Chew ginger slices before travel.", "Smell peppermint oil.", "Drink lemon water."] },
+  { "name": "Nausea", "solutions": ["Drink ginger tea.", "Sip lemon water.", "Eat small frequent meals."] },
+  { "name": "Mouth Ulcers", "solutions": ["Apply honey on ulcers.", "Rinse with coconut water.", "Chew tulsi leaves."] },
+  { "name": "Weak Bones", "solutions": ["Drink milk daily.", "Sit in sunlight for vitamin D.", "Eat sesame seeds."] },
+  { "name": "Eye Strain", "solutions": ["Splash eyes with cold water.", "Do palming exercise for eyes.", "Eat carrots and leafy greens."] },
+  { "name": "Dark Circles", "solutions": ["Apply cucumber slices on eyes.", "Massage with almond oil at night.", "Sleep adequately."] },
+  { "name": "Wrinkles", "solutions": ["Apply aloe vera gel on face.", "Massage with olive oil.", "Eat vitamin E-rich foods."] },
+  { "name": "Varicose Veins", "solutions": ["Elevate legs while resting.", "Massage with castor oil.", "Do regular walking."] },
+  { "name": "Gallstones", "solutions": ["Drink apple cider vinegar in water.", "Consume lemon juice daily.", "Eat fiber-rich foods."] },
+  { "name": "Liver Problems", "solutions": ["Drink dandelion root tea.", "Consume beetroot juice.", "Avoid alcohol and fried foods."] },
+  { "name": "Jaundice", "solutions": ["Drink sugarcane juice.", "Eat papaya and tomatoes.", "Stay hydrated with coconut water."] },
+  { "name": "Cold Sores", "solutions": ["Apply aloe vera gel.", "Use honey on sores.", "Eat lysine-rich foods like legumes."] },
+  { "name": "Piles", "solutions": ["Eat fiber-rich foods.", "Drink warm water with lemon.", "Apply aloe vera gel externally."] },
+  { "name": "Bronchitis", "solutions": ["Drink ginger tea with honey.", "Inhale steam daily.", "Avoid cold and dusty places."] },
+  { "name": "Whooping Cough", "solutions": ["Take ginger juice with honey.", "Drink turmeric milk.", "Rest and stay hydrated."] },
+  { "name": "Tonsillitis", "solutions": ["Gargle with warm salt water.", "Drink turmeric milk.", "Eat soft foods."] },
+  { "name": "Stroke Recovery", "solutions": ["Practice physiotherapy exercises.", "Eat walnuts and almonds.", "Meditate for relaxation."] },
+  { "name": "Parkinson’s", "solutions": ["Do hand exercises.", "Consume omega-3 foods.", "Practice yoga for flexibility."] },
+  { "name": "Epilepsy", "solutions": ["Eat magnesium-rich foods.", "Practice relaxation techniques.", "Avoid bright flashing lights."] },
+  { "name": "Cholesterol", "solutions": ["Drink green tea daily.", "Eat oats and flaxseeds.", "Avoid fried and processed foods."] },
+  { "name": "Astigmatism", "solutions": ["Do eye exercises daily.", "Eat carrots and spinach.", "Practice eye relaxation techniques."] },
+  { "name": "Cataract", "solutions": ["Eat antioxidant-rich foods like grapes.", "Apply rose water drops for cooling.", "Wear sunglasses in sunlight."] },
+  { "name": "Glaucoma", "solutions": ["Practice meditation for eye pressure.", "Drink green tea.", "Limit caffeine intake."] },
+  { "name": "Ear Infection", "solutions": ["Apply warm garlic oil drops.", "Keep ear dry.", "Drink ginger tea for immunity."] },
+
+  { "name": "Acne", "solutions": ["Apply tea tree oil diluted with water.", "Use honey and cinnamon paste as a mask.", "Wash face twice daily with mild cleanser."] },
+  { "name": "Insomnia", "solutions": ["Drink warm chamomile tea before bed.", "Practice meditation or deep breathing.", "Avoid caffeine in the evening."] },
+  { "name": "Indigestion", "solutions": ["Drink ginger tea after meals.", "Chew fennel seeds to improve digestion.", "Avoid heavy meals before bedtime."] },
+  { "name": "Anemia", "solutions": ["Eat iron-rich foods like spinach and beetroot.", "Drink pomegranate juice daily.", "Include dates and jaggery in diet."] },
+  { "name": "Migraine", "solutions": ["Apply peppermint oil on temples.", "Drink ginger tea to ease nausea.", "Rest in a dark, quiet room."] },
+  { "name": "High Blood Pressure", "solutions": ["Drink garlic-infused water daily.", "Reduce salt intake in food.", "Practice yoga and breathing exercises."] },
+  { "name": "Asthma", "solutions": ["Inhale steam with a few drops of eucalyptus oil.", "Consume turmeric with warm milk.", "Practice regular breathing exercises."] },
+  { "name": "Bronchitis", "solutions": ["Drink warm ginger and honey tea.", "Inhale steam with tulsi leaves.", "Avoid exposure to smoke and dust."] },
+  { "name": "Obesity", "solutions": ["Drink warm water with lemon and honey every morning.", "Eat more fiber-rich foods.", "Do brisk walking for 30 minutes daily."] },
+  { "name": "Kidney Stones", "solutions": ["Drink plenty of water with lemon juice.", "Consume coconut water regularly.", "Eat watermelon daily."] },
+  { "name": "Gout", "solutions": ["Soak affected joint in warm water with Epsom salt.", "Avoid red meat and alcohol.", "Eat cherries to reduce uric acid."] },
+  { "name": "Psoriasis", "solutions": ["Apply aloe vera gel on affected skin.", "Use oatmeal baths for soothing.", "Avoid spicy foods and alcohol."] },
+  { "name": "Cough", "solutions": ["Drink honey with warm water.", "Chew raw ginger with salt.", "Inhale steam twice daily."] },
+  { "name": "Cold", "solutions": ["Drink tulsi and ginger tea.", "Inhale steam with eucalyptus oil.", "Consume vitamin C rich foods."] },
+  { "name": "Flu", "solutions": ["Drink warm turmeric milk.", "Stay hydrated with soups and herbal teas.", "Get adequate rest."] },
+  { "name": "Ulcer", "solutions": ["Drink cabbage juice daily.", "Eat bananas for soothing effect.", "Avoid spicy and fried foods."] },
+  { "name": "Gallstones", "solutions": ["Drink apple cider vinegar diluted in water.", "Consume pear juice regularly.", "Eat high-fiber foods."] },
+  { "name": "Piles", "solutions": ["Drink plenty of water and eat fiber-rich diet.", "Apply aloe vera gel to reduce irritation.", "Sit in warm water baths."] },
+  { "name": "Varicose Veins", "solutions": ["Massage legs with sesame oil.", "Elevate legs while resting.", "Wear compression stockings."] },
+  { "name": "Thyroid Imbalance", "solutions": ["Consume walnuts and pumpkin seeds.", "Practice pranayama breathing daily.", "Avoid excessive soy products."] },
+  { "name": "PCOS", "solutions": ["Drink spearmint tea to balance hormones.", "Eat flaxseeds daily.", "Maintain a regular exercise routine."] },
+  { "name": "Back Pain", "solutions": ["Apply warm compress or heating pad.", "Do gentle stretching and yoga.", "Massage with herbal oil."] },
+  { "name": "Sciatica", "solutions": ["Apply hot and cold packs alternately.", "Do yoga stretches for lower back.", "Massage with sesame or mustard oil."] },
+  { "name": "Toothache", "solutions": ["Apply clove oil on affected tooth.", "Rinse mouth with warm salt water.", "Chew raw garlic."] },
+  { "name": "Sore Throat", "solutions": ["Gargle with warm salt water.", "Drink ginger and honey tea.", "Suck on turmeric lozenges."] },
+  { "name": "Diarrhea", "solutions": ["Drink ORS or rice water.", "Eat boiled potatoes or bananas.", "Avoid dairy and fried foods."] },
+  { "name": "Dandruff", "solutions": ["Massage scalp with coconut oil and lemon.", "Apply neem paste on scalp.", "Rinse hair with apple cider vinegar."] },
+  { "name": "Hair Loss", "solutions": ["Massage scalp with onion juice.", "Apply castor oil with coconut oil.", "Eat amla or gooseberry daily."] },
+  { "name": "Dark Circles", "solutions": ["Apply cucumber slices on eyes.", "Massage with almond oil at night.", "Get adequate sleep."] },
+  { "name": "Dry Skin", "solutions": ["Apply honey mask on face.", "Use coconut or olive oil as moisturizer.", "Stay hydrated with 8 glasses of water daily."] },
+  { "name": "Sunburn", "solutions": ["Apply aloe vera gel frequently.", "Use cool compresses on affected area.", "Stay away from direct sun until healed."] },
+  { "name": "Wrinkles", "solutions": ["Apply mashed banana face mask.", "Massage skin with olive oil.", "Use sunscreen daily."] },
+  { "name": "Fever", "solutions": ["Drink tulsi and ginger tea.", "Sponge body with lukewarm water.", "Stay hydrated with fluids."] },
+  { "name": "Eye Strain", "solutions": ["Wash eyes with rose water.", "Follow 20-20-20 rule while using screens.", "Massage temples with almond oil."] },
+  { "name": "Allergies", "solutions": ["Drink nettle tea to reduce symptoms.", "Use saline nasal spray.", "Avoid allergen exposure."] },
+  { "name": "Ear Infection", "solutions": ["Put warm garlic oil drops in ear.", "Apply warm compress outside ear.", "Avoid inserting objects inside ear."] },
+  { "name": "Motion Sickness", "solutions": ["Chew ginger candies before travel.", "Sip peppermint tea.", "Look at stable objects outside vehicle."] },
+  { "name": "Anxiety", "solutions": ["Practice deep breathing exercises.", "Drink chamomile tea.", "Do daily meditation or yoga."] },
+  { "name": "Depression", "solutions": ["Spend time in sunlight daily.", "Exercise for 30 minutes regularly.", "Maintain a gratitude journal."] },
+  { "name": "Low Immunity", "solutions": ["Drink amla juice daily.", "Eat garlic and ginger regularly.", "Include vitamin C foods in diet."] },
+  { "name": "Osteoporosis", "solutions": ["Drink milk or soy milk daily.", "Do weight-bearing exercises.", "Eat sesame seeds for calcium."] },
+  { "name": "Weak Memory", "solutions": ["Eat soaked almonds daily.", "Drink brahmi tea.", "Do crossword puzzles or brain games."] },
+  { "name": "Parkinson’s Disease", "solutions": ["Do hand and leg exercises daily.", "Eat antioxidant-rich foods.", "Practice yoga for flexibility."] },
+  { "name": "Alzheimer’s Disease", "solutions": ["Engage in memory games.", "Eat walnuts and omega-3 foods.", "Maintain a daily routine."] },
+  { "name": "Stroke Recovery", "solutions": ["Do physiotherapy exercises regularly.", "Eat flaxseeds for brain health.", "Practice speech therapy if required."] },
+  { "name": "Fracture Healing", "solutions": ["Eat calcium-rich foods like milk and spinach.", "Apply turmeric paste on swollen area.", "Take adequate rest."] },
+  { "name": "Sprain", "solutions": ["Apply ice immediately on swollen area.", "Elevate limb and rest.", "Use bandage for support."] },
+  { "name": "Burns (Minor)", "solutions": ["Apply aloe vera gel immediately.", "Keep area under cool water.", "Avoid applying ice directly."] },
+  { "name": "Acid Reflux", "solutions": ["Drink cold milk when symptoms arise.", "Chew basil leaves after meals.", "Avoid spicy and oily foods."] },
+  { "name": "Bloating", "solutions": ["Drink fennel tea after meals.", "Do light walking post eating.", "Avoid carbonated drinks."] },
+  { "name": "Gas Trouble", "solutions": ["Eat ajwain (carom seeds) with salt.", "Drink ginger tea.", "Practice yoga poses like Pawanmuktasana."] },
+  { "name": "Cholesterol", "solutions": ["Eat oats and flaxseeds daily.", "Drink green tea.", "Avoid fried and fatty foods."] },
+  { "name": "Diabetes", "solutions": ["Drink karela (bitter gourd) juice daily.", "Eat fenugreek seeds soaked overnight.", "Exercise regularly."] },
+  { "name": "Low Blood Pressure", "solutions": ["Drink a glass of salted buttermilk.", "Eat raisins soaked overnight.", "Drink coffee in moderation."] },
+  { "name": "Dehydration", "solutions": ["Drink ORS solution or coconut water.", "Eat water-rich fruits like watermelon.", "Avoid alcohol and too much caffeine."] },
+  { "name": "Fatigue", "solutions": ["Drink ginseng tea for energy.", "Eat small frequent meals.", "Get 7–8 hours of proper sleep."] },
+  { "name": "Mouth Ulcers", "solutions": ["Apply honey on ulcers.", "Rinse mouth with salt water.", "Eat yogurt daily."] },
+  { "name": "Bad Breath", "solutions": ["Chew fresh parsley or mint leaves.", "Gargle with clove water.", "Maintain proper oral hygiene."] }
+
+        ];
+
+        // Function to display suggestions
+        function showSuggestions() {
+            const query = document.getElementById('search').value.toLowerCase();
+            const suggestionsDiv = document.getElementById('suggestions');
+            const cardDiv = document.getElementById('solution-card');
+            cardDiv.classList.remove('active');
+            cardDiv.innerHTML = "";
+            suggestionsDiv.innerHTML = "";
+
+            if (query.trim() === "") {
+                suggestionsDiv.style.display = "none";
+                return;
+            }
+
+            const suggestions = diseaseSolutions.filter(disease =>
+                disease.name.toLowerCase().includes(query)
+            );
+
+            if (suggestions.length > 0) {
+                suggestions.forEach(disease => {
+                    const li = document.createElement('li');
+                    li.textContent = disease.name;
+                    li.onclick = () => displaySolution(disease.name);
+                    suggestionsDiv.appendChild(li);
+                });
+                suggestionsDiv.style.display = "block";
+            } else {
+                suggestionsDiv.style.display = "none";
+            }
+        }
+
+        // Function to display the solution card
+        function displaySolution(name) {
+            const cardDiv = document.getElementById('solution-card');
+            const suggestionsDiv = document.getElementById('suggestions');
+            const disease = diseaseSolutions.find(disease => disease.name === name);
+
+            if (disease) {
+                let cardContent = `
+                    <h2>${disease.name}</h2>
+                    <ul>
+                        ${disease.solutions.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                `;
+                cardDiv.innerHTML = cardContent;
+                cardDiv.classList.add('active');
+            }
+            suggestionsDiv.style.display = "none";
+        }
+    </script>
+</body>
+</html>

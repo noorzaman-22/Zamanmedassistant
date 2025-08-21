@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disease Information</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 50px;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+.back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 50px;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      transform: translateX(-5px) scale(1.05);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+    }
+
+    .back-btn svg {
+      transition: transform 0.3s ease;
+    }
+
+    .back-btn:hover svg {
+      transform: translateX(-4px);
+    }
+    .back-btn:hover {
+      transform: translateX(-5px) scale(1.05);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+    }
+
+    .back-btn svg {
+      transition: transform 0.3s ease;
+    }
+
+    .back-btn:hover svg {
+      transform: translateX(-4px);
+    }
+        h1 {
+            font-size: 2.5rem;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        .search-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .search-bar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            max-width: 600px;
+            padding: 15px;
+            font-size: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            outline: none;
+        }
+
+        input[type="text"]:focus {
+            border-color: #007BFF;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+        }
+
+        button {
+            margin-left: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+        }
+
+        ul.suggestions {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0;
+            list-style: none;
+            border: 1px solid #ddd;
+            border-radius: 0 0 10px 10px;
+            background: #ffffff;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        ul.suggestions li {
+            padding: 15px;
+            font-size: 1rem;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid #f3f3f3;
+        }
+
+        ul.suggestions li:last-child {
+            border-bottom: none;
+        }
+
+        ul.suggestions li:hover {
+            background: #f1f9ff;
+            color: #007BFF;
+        }
+
+        .info-container {
+            display: none;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 15px;
+            background: #ffffff;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+
+        .info-container.active {
+            display: block;
+        }
+
+        .info-container h2 {
+            font-size: 1.5rem;
+            color: #007BFF;
+            margin-bottom: 10px;
+        }
+
+        .info-container p {
+            margin: 10px 0;
+        }
+
+        .severity {
+            text-transform: uppercase;
+            font-weight: bold;
+            color: #e63946;
+            font-size: 0.9rem;
+            float: right;
+        }
+    </style>
+</head>
+<body>
+    <a href="javascript:history.back()" class="back-btn">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" 
+         stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+    Back
+  </a>
+    <h1>Disease Information</h1>
+    <div class="search-container">
+        <div class="search-bar">
+            <input type="text" id="search" placeholder="Search for a disease..." oninput="showSuggestions()">
+            <button onclick="handleSearch()">Search</button>
+        </div>
+        <ul id="suggestions" class="suggestions"></ul>
+        <div id="info-container" class="info-container"></div>
+    </div>
+    <script>
+        // Data for diseases
+        const diseases = [
+ 
+    {
+        "name": "Asthma",
+        "severity": "Chronic",
+        "description": "Asthma is a respiratory condition marked by spasms in the bronchi, causing breathing difficulties.",
+        "symptoms": ["Wheezing", "Shortness of breath", "Chest tightness", "Coughing"],
+        "treatment": "Inhalers, avoiding triggers, and prescribed medications."
+    },
+    {
+        "name": "Diabetes",
+        "severity": "Chronic",
+        "description": "A disease that occurs when blood glucose levels are too high due to insulin problems.",
+        "symptoms": ["Frequent urination", "Increased thirst", "Unexplained weight loss", "Fatigue"],
+        "treatment": "Insulin therapy, oral medications, healthy diet, and exercise."
+    },
+    {
+        "name": "Hypertension",
+        "severity": "Chronic",
+        "description": "A condition in which the force of the blood against artery walls is consistently too high.",
+        "symptoms": ["Headaches", "Dizziness", "Nosebleeds", "Blurred vision"],
+        "treatment": "Lifestyle changes, antihypertensive medications."
+    },
+    {
+        "name": "Common Cold",
+        "severity": "Mild",
+        "description": "A viral infection of the upper respiratory tract.",
+        "symptoms": ["Runny nose", "Sneezing", "Sore throat", "Cough"],
+        "treatment": "Rest, hydration, over-the-counter medicines."
+    },
+    {
+        "name": "Influenza",
+        "severity": "Acute",
+        "description": "A contagious viral infection that attacks the respiratory system.",
+        "symptoms": ["Fever", "Chills", "Muscle aches", "Fatigue"],
+        "treatment": "Antiviral drugs, rest, hydration."
+    },
+    {
+        "name": "Tuberculosis",
+        "severity": "Chronic",
+        "description": "An infectious bacterial disease that mainly affects the lungs.",
+        "symptoms": ["Persistent cough", "Weight loss", "Night sweats", "Fever"],
+        "treatment": "Antibiotics for several months."
+    },
+    {
+        "name": "COVID-19",
+        "severity": "Acute",
+        "description": "A viral respiratory illness caused by SARS-CoV-2.",
+        "symptoms": ["Fever", "Cough", "Loss of taste or smell", "Breathing difficulty"],
+        "treatment": "Supportive care, antivirals, oxygen therapy if severe."
+    },
+    {
+        "name": "Pneumonia",
+        "severity": "Acute",
+        "description": "Infection that inflames air sacs in one or both lungs.",
+        "symptoms": ["Cough with phlegm", "Fever", "Chills", "Breathing difficulty"],
+        "treatment": "Antibiotics, antivirals, supportive care."
+    },
+    {
+        "name": "Bronchitis",
+        "severity": "Acute",
+        "description": "Inflammation of the bronchial tubes, often caused by infection.",
+        "symptoms": ["Cough with mucus", "Chest discomfort", "Fatigue", "Shortness of breath"],
+        "treatment": "Rest, fluids, cough medicine, inhalers if needed."
+    },
+    {
+        "name": "Malaria",
+        "severity": "Acute",
+        "description": "A mosquito-borne disease caused by Plasmodium parasites.",
+        "symptoms": ["Fever", "Chills", "Sweats", "Headache"],
+        "treatment": "Antimalarial drugs."
+    },
+    {
+        "name": "Dengue",
+        "severity": "Acute",
+        "description": "A mosquito-borne viral infection causing flu-like illness.",
+        "symptoms": ["High fever", "Severe headache", "Joint pain", "Skin rash"],
+        "treatment": "Supportive care, hydration, pain relievers."
+    },
+    {
+        "name": "Typhoid",
+        "severity": "Acute",
+        "description": "A bacterial infection due to Salmonella typhi.",
+        "symptoms": ["High fever", "Abdominal pain", "Headache", "Weakness"],
+        "treatment": "Antibiotics, hydration."
+    },
+    {
+        "name": "Hepatitis B",
+        "severity": "Chronic",
+        "description": "A viral infection that affects the liver.",
+        "symptoms": ["Fatigue", "Jaundice", "Abdominal pain", "Loss of appetite"],
+        "treatment": "Antivirals, liver monitoring, vaccination for prevention."
+    },
+    {
+        "name": "Hepatitis C",
+        "severity": "Chronic",
+        "description": "A viral infection leading to liver inflammation.",
+        "symptoms": ["Fatigue", "Jaundice", "Nausea", "Joint pain"],
+        "treatment": "Antiviral medications."
+    },
+    {
+        "name": "Cholera",
+        "severity": "Acute",
+        "description": "An infection of the small intestine by Vibrio cholerae.",
+        "symptoms": ["Severe diarrhea", "Dehydration", "Muscle cramps", "Nausea"],
+        "treatment": "Oral rehydration solution, IV fluids, antibiotics."
+    },
+    {
+        "name": "Chickenpox",
+        "severity": "Acute",
+        "description": "A contagious viral infection causing itchy skin rashes.",
+        "symptoms": ["Itchy blisters", "Fever", "Fatigue", "Loss of appetite"],
+        "treatment": "Rest, calamine lotion, antihistamines."
+    },
+    {
+        "name": "Measles",
+        "severity": "Acute",
+        "description": "A viral infection that spreads easily and affects children.",
+        "symptoms": ["Fever", "Cough", "Runny nose", "Skin rash"],
+        "treatment": "Supportive care, Vitamin A supplements."
+    },
+    {
+        "name": "Migraine",
+        "severity": "Chronic",
+        "description": "A neurological condition causing intense headaches.",
+        "symptoms": ["Severe headache", "Nausea", "Sensitivity to light", "Vision disturbances"],
+        "treatment": "Pain relievers, lifestyle management, preventive medicines."
+    },
+    {
+        "name": "Anemia",
+        "severity": "Chronic",
+        "description": "A condition where you lack enough healthy red blood cells.",
+        "symptoms": ["Fatigue", "Pale skin", "Dizziness", "Shortness of breath"],
+        "treatment": "Iron supplements, healthy diet, treating underlying cause."
+    },
+    {
+        "name": "Arthritis",
+        "severity": "Chronic",
+        "description": "Inflammation of one or more joints, causing pain and stiffness.",
+        "symptoms": ["Joint pain", "Swelling", "Stiffness", "Reduced mobility"],
+        "treatment": "Painkillers, physiotherapy, anti-inflammatory drugs."
+    },
+    
+    {
+        "name": "Epilepsy",
+        "severity": "Chronic",
+        "description": "A neurological disorder marked by recurrent seizures.",
+        "symptoms": ["Seizures", "Temporary confusion", "Loss of consciousness", "Uncontrollable movements"],
+        "treatment": "Antiepileptic drugs, surgery, lifestyle modifications."
+    },
+    {
+        "name": "Depression",
+        "severity": "Chronic",
+        "description": "A mood disorder causing persistent sadness and loss of interest.",
+        "symptoms": ["Persistent sadness", "Fatigue", "Loss of appetite", "Hopelessness"],
+        "treatment": "Therapy, antidepressants, lifestyle changes."
+    },
+    {
+        "name": "Anxiety Disorder",
+        "severity": "Chronic",
+        "description": "A mental health condition with excessive fear or worry.",
+        "symptoms": ["Restlessness", "Rapid heartbeat", "Sweating", "Difficulty concentrating"],
+        "treatment": "Therapy, anti-anxiety medications, stress management."
+    },
+    {
+        "name": "Schizophrenia",
+        "severity": "Chronic",
+        "description": "A severe mental disorder affecting thoughts, emotions, and behavior.",
+        "symptoms": ["Hallucinations", "Delusions", "Disorganized speech", "Lack of motivation"],
+        "treatment": "Antipsychotic medications, psychotherapy."
+    },
+    {
+        "name": "Parkinson's Disease",
+        "severity": "Chronic",
+        "description": "A progressive nervous system disorder affecting movement.",
+        "symptoms": ["Tremors", "Stiffness", "Slow movement", "Balance problems"],
+        "treatment": "Dopamine-related medications, physiotherapy."
+    },
+    {
+        "name": "Alzheimer's Disease",
+        "severity": "Chronic",
+        "description": "A progressive neurological disorder that leads to memory loss.",
+        "symptoms": ["Memory loss", "Confusion", "Difficulty speaking", "Disorientation"],
+        "treatment": "Supportive care, cognitive therapies, medications."
+    },
+    {
+        "name": "Stroke",
+        "severity": "Acute",
+        "description": "A condition where blood supply to part of the brain is interrupted.",
+        "symptoms": ["Sudden numbness", "Speech difficulty", "Vision problems", "Weakness on one side"],
+        "treatment": "Clot-busting drugs, surgery, rehabilitation."
+    },
+    {
+        "name": "Heart Attack",
+        "severity": "Acute",
+        "description": "A blockage of blood flow to the heart muscle.",
+        "symptoms": ["Chest pain", "Shortness of breath", "Nausea", "Sweating"],
+        "treatment": "Emergency care, medications, angioplasty."
+    },
+    {
+        "name": "Obesity",
+        "severity": "Chronic",
+        "description": "A condition of having excessive body fat.",
+        "symptoms": ["Excess body weight", "Breathlessness", "Joint pain", "Fatigue"],
+        "treatment": "Diet control, exercise, weight-loss surgery if severe."
+    },
+    {
+        "name": "Eczema",
+        "severity": "Chronic",
+        "description": "A condition that makes skin red, itchy, and inflamed.",
+        "symptoms": ["Itchy skin", "Dry patches", "Rashes", "Cracked skin"],
+        "treatment": "Moisturizers, steroid creams, avoiding triggers."
+    },
+    {
+        "name": "Psoriasis",
+        "severity": "Chronic",
+        "description": "An autoimmune condition causing rapid skin cell buildup.",
+        "symptoms": ["Scaly patches", "Itching", "Dry skin", "Redness"],
+        "treatment": "Topical ointments, light therapy, immune-suppressing drugs."
+    },
+    {
+        "name": "Allergic Rhinitis",
+        "severity": "Mild",
+        "description": "An allergic reaction causing sneezing and nasal issues.",
+        "symptoms": ["Sneezing", "Runny nose", "Itchy eyes", "Congestion"],
+        "treatment": "Antihistamines, nasal sprays, avoiding allergens."
+    },
+    {
+        "name": "Peptic Ulcer",
+        "severity": "Chronic",
+        "description": "Sores that develop in the stomach or small intestine lining.",
+        "symptoms": ["Abdominal pain", "Bloating", "Nausea", "Indigestion"],
+        "treatment": "Antacids, antibiotics, avoiding spicy food."
+    },
+    {
+        "name": "Gallstones",
+        "severity": "Chronic",
+        "description": "Hardened deposits in the gallbladder.",
+        "symptoms": ["Abdominal pain", "Nausea", "Vomiting", "Indigestion"],
+        "treatment": "Surgery, pain management, dietary changes."
+    },
+    {
+        "name": "Kidney Stones",
+        "severity": "Acute",
+        "description": "Hard deposits of minerals in the kidneys.",
+        "symptoms": ["Severe back pain", "Blood in urine", "Nausea", "Frequent urination"],
+        "treatment": "Pain relievers, increased water intake, surgery if large."
+    },
+    {
+        "name": "Gastritis",
+        "severity": "Chronic",
+        "description": "Inflammation of the stomach lining.",
+        "symptoms": ["Stomach pain", "Indigestion", "Nausea", "Loss of appetite"],
+        "treatment": "Antacids, proton pump inhibitors, avoiding irritants."
+    },
+    {
+        "name": "Appendicitis",
+        "severity": "Acute",
+        "description": "Inflammation of the appendix causing severe abdominal pain.",
+        "symptoms": ["Severe abdominal pain", "Fever", "Nausea", "Vomiting"],
+        "treatment": "Surgical removal of the appendix."
+    },
+    {
+        "name": "Celiac Disease",
+        "severity": "Chronic",
+        "description": "An autoimmune disorder where gluten damages the small intestine.",
+        "symptoms": ["Diarrhea", "Bloating", "Fatigue", "Weight loss"],
+        "treatment": "Strict gluten-free diet."
+    },
+    {
+        "name": "Thyroid Disorder",
+        "severity": "Chronic",
+        "description": "Conditions that affect thyroid hormone production.",
+        "symptoms": ["Weight changes", "Fatigue", "Hair loss", "Mood changes"],
+        "treatment": "Thyroid hormone replacement, antithyroid medications."
+    },
+    {
+        "name": "Sinusitis",
+        "severity": "Acute",
+        "description": "Inflammation of the sinuses often due to infection.",
+        "symptoms": ["Headache", "Nasal congestion", "Facial pain", "Cough"],
+        "treatment": "Decongestants, antibiotics if bacterial, nasal sprays."
+    },
+    
+    {
+        "name": "Leukemia",
+        "severity": "Chronic",
+        "description": "A type of cancer that affects blood and bone marrow.",
+        "symptoms": ["Fatigue", "Frequent infections", "Easy bruising", "Weight loss"],
+        "treatment": "Chemotherapy, radiation therapy, bone marrow transplant."
+    },
+    {
+        "name": "Lung Cancer",
+        "severity": "Chronic",
+        "description": "A malignant tumor in the lungs caused by uncontrolled cell growth.",
+        "symptoms": ["Chronic cough", "Chest pain", "Weight loss", "Coughing blood"],
+        "treatment": "Surgery, chemotherapy, radiation therapy."
+    },
+    {
+        "name": "Breast Cancer",
+        "severity": "Chronic",
+        "description": "A cancer that forms in the breast tissue.",
+        "symptoms": ["Breast lump", "Skin changes", "Nipple discharge", "Pain"],
+        "treatment": "Surgery, chemotherapy, radiation, hormonal therapy."
+    },
+    {
+        "name": "Prostate Cancer",
+        "severity": "Chronic",
+        "description": "A type of cancer in the prostate gland of men.",
+        "symptoms": ["Urination difficulty", "Pelvic pain", "Blood in urine", "Back pain"],
+        "treatment": "Surgery, radiation, hormone therapy."
+    },
+    {
+        "name": "Cervical Cancer",
+        "severity": "Chronic",
+        "description": "A cancer that occurs in the cells of the cervix.",
+        "symptoms": ["Abnormal bleeding", "Pelvic pain", "Pain during intercourse", "Discharge"],
+        "treatment": "Surgery, chemotherapy, radiation."
+    },
+    {
+        "name": "Skin Cancer",
+        "severity": "Chronic",
+        "description": "Uncontrolled growth of abnormal skin cells.",
+        "symptoms": ["Skin lesion", "New moles", "Itchy patches", "Bleeding spots"],
+        "treatment": "Surgery, cryotherapy, radiation."
+    },
+    {
+        "name": "Osteoporosis",
+        "severity": "Chronic",
+        "description": "A condition where bones become weak and brittle.",
+        "symptoms": ["Back pain", "Fractures", "Stooped posture", "Loss of height"],
+        "treatment": "Calcium supplements, vitamin D, exercise."
+    },
+    {
+        "name": "Gout",
+        "severity": "Chronic",
+        "description": "A type of arthritis caused by uric acid crystal buildup.",
+        "symptoms": ["Joint pain", "Redness", "Swelling", "Tenderness"],
+        "treatment": "Anti-inflammatory drugs, dietary changes."
+    },
+    {
+        "name": "Multiple Sclerosis",
+        "severity": "Chronic",
+        "description": "A disease where the immune system attacks nerve coverings.",
+        "symptoms": ["Numbness", "Vision problems", "Muscle weakness", "Fatigue"],
+        "treatment": "Immunosuppressive therapy, physiotherapy."
+    },
+    {
+        "name": "HIV/AIDS",
+        "severity": "Chronic",
+        "description": "A virus that attacks the immune system and can lead to AIDS.",
+        "symptoms": ["Fever", "Weight loss", "Frequent infections", "Night sweats"],
+        "treatment": "Antiretroviral therapy (ART)."
+    },
+    {
+        "name": "Rabies",
+        "severity": "Acute",
+        "description": "A viral disease usually spread by animal bites.",
+        "symptoms": ["Fever", "Hydrophobia", "Agitation", "Paralysis"],
+        "treatment": "Post-exposure vaccination, supportive care."
+    },
+    {
+        "name": "Polio",
+        "severity": "Chronic",
+        "description": "A viral disease that can cause paralysis.",
+        "symptoms": ["Fever", "Fatigue", "Muscle pain", "Paralysis"],
+        "treatment": "Supportive care, vaccination for prevention."
+    },
+    {
+        "name": "Mumps",
+        "severity": "Acute",
+        "description": "A viral infection that affects the salivary glands.",
+        "symptoms": ["Swollen glands", "Fever", "Headache", "Fatigue"],
+        "treatment": "Rest, fluids, pain relievers."
+    },
+    {
+        "name": "Tetanus",
+        "severity": "Acute",
+        "description": "A bacterial infection causing muscle stiffness and spasms.",
+        "symptoms": ["Jaw stiffness", "Muscle spasms", "Difficulty swallowing", "Fever"],
+        "treatment": "Antitoxin, antibiotics, muscle relaxants."
+    },
+    {
+        "name": "Whooping Cough",
+        "severity": "Acute",
+        "description": "A contagious respiratory infection causing severe coughing fits.",
+        "symptoms": ["Severe coughing", "Runny nose", "Fever", "Fatigue"],
+        "treatment": "Antibiotics, rest, fluids."
+    },
+    {
+        "name": "Meningitis",
+        "severity": "Acute",
+        "description": "Inflammation of the membranes around the brain and spinal cord.",
+        "symptoms": ["Severe headache", "Stiff neck", "Fever", "Nausea"],
+        "treatment": "Antibiotics, antiviral medicines, hospitalization."
+    },
+    {
+        "name": "Encephalitis",
+        "severity": "Acute",
+        "description": "Inflammation of the brain caused by infection.",
+        "symptoms": ["Fever", "Seizures", "Confusion", "Headache"],
+        "treatment": "Antivirals, supportive care."
+    },
+    {
+        "name": "Huntington's Disease",
+        "severity": "Chronic",
+        "description": "A genetic disorder causing breakdown of nerve cells in the brain.",
+        "symptoms": ["Involuntary movements", "Difficulty speaking", "Mood changes", "Cognitive decline"],
+        "treatment": "No cure, supportive therapies, medications for symptoms."
+    },
+    {
+        "name": "Cataract",
+        "severity": "Chronic",
+        "description": "Clouding of the lens of the eye.",
+        "symptoms": ["Blurry vision", "Glare", "Faded colors", "Poor night vision"],
+        "treatment": "Surgery to replace lens."
+    },
+    {
+        "name": "Glaucoma",
+        "severity": "Chronic",
+        "description": "A group of eye diseases that damage the optic nerve.",
+        "symptoms": ["Blurred vision", "Eye pain", "Headache", "Vision loss"],
+        "treatment": "Eye drops, surgery, laser treatment."
+    },
+    {
+        "name": "Conjunctivitis",
+        "severity": "Acute",
+        "description": "Also called pink eye, it is inflammation of the conjunctiva.",
+        "symptoms": ["Red eye", "Itching", "Tearing", "Discharge"],
+        "treatment": "Antibiotic or antiviral eye drops, rest."
+    },
+    {
+        "name": "Otitis Media",
+        "severity": "Acute",
+        "description": "An infection of the middle ear, common in children.",
+        "symptoms": ["Ear pain", "Hearing loss", "Fever", "Irritability"],
+        "treatment": "Antibiotics, pain relievers."
+    },
+    {
+        "name": "Tonsillitis",
+        "severity": "Acute",
+        "description": "Inflammation of the tonsils, usually from infection.",
+        "symptoms": ["Sore throat", "Swollen tonsils", "Fever", "Difficulty swallowing"],
+        "treatment": "Antibiotics, pain relievers, sometimes surgery."
+    },
+    {
+        "name": "Piles (Hemorrhoids)",
+        "severity": "Chronic",
+        "description": "Swollen veins in the rectum or anus causing discomfort.",
+        "symptoms": ["Pain", "Itching", "Bleeding", "Swelling"],
+        "treatment": "Topical creams, high-fiber diet, surgery if severe."
+    },
+    {
+        "name": "Varicose Veins",
+        "severity": "Chronic",
+        "description": "Enlarged, twisted veins often appearing in the legs.",
+        "symptoms": ["Swollen veins", "Leg pain", "Swelling", "Skin discoloration"],
+        "treatment": "Compression stockings, laser therapy, surgery."
+    },
+    {
+        "name": "Sciatica",
+        "severity": "Chronic",
+        "description": "Pain radiating along the sciatic nerve, usually from herniated disc.",
+        "symptoms": ["Lower back pain", "Leg pain", "Numbness", "Weakness"],
+        "treatment": "Pain relievers, physiotherapy, surgery if severe."
+    },
+    {
+        "name": "Scoliosis",
+        "severity": "Chronic",
+        "description": "Abnormal sideways curvature of the spine.",
+        "symptoms": ["Uneven shoulders", "Back pain", "Postural changes", "Restricted movement"],
+        "treatment": "Bracing, physiotherapy, surgery in severe cases."
+    },
+    {
+        "name": "Cystic Fibrosis",
+        "severity": "Chronic",
+        "description": "A genetic disorder affecting lungs and digestive system.",
+        "symptoms": ["Persistent cough", "Frequent lung infections", "Poor growth", "Salty skin"],
+        "treatment": "Medications, chest physiotherapy, lung transplant if severe."
+    },
+    {
+        "name": "Crohn's Disease",
+        "severity": "Chronic",
+        "description": "A type of inflammatory bowel disease affecting the digestive tract.",
+        "symptoms": ["Abdominal pain", "Diarrhea", "Fatigue", "Weight loss"],
+        "treatment": "Anti-inflammatory drugs, immune suppressants, surgery."
+    },
+    {
+        "name": "Ulcerative Colitis",
+        "severity": "Chronic",
+        "description": "Inflammation and ulcers in the colon and rectum.",
+        "symptoms": ["Diarrhea with blood", "Abdominal pain", "Fatigue", "Weight loss"],
+        "treatment": "Anti-inflammatory drugs, surgery if severe."
+    },
+    {
+        "name": "Irritable Bowel Syndrome (IBS)",
+        "severity": "Chronic",
+        "description": "A gastrointestinal disorder causing abdominal discomfort and bowel changes.",
+        "symptoms": ["Abdominal cramps", "Bloating", "Constipation", "Diarrhea"],
+        "treatment": "Dietary changes, stress management, medications."
+    },
+    {
+        "name": "Pancreatitis",
+        "severity": "Acute",
+        "description": "Inflammation of the pancreas.",
+        "symptoms": ["Severe abdominal pain", "Nausea", "Vomiting", "Fever"],
+        "treatment": "Hospitalization, IV fluids, pain relief."
+    },
+    {
+        "name": "Hernia",
+        "severity": "Chronic",
+        "description": "A bulging of an organ or tissue through an abnormal opening.",
+        "symptoms": ["Visible lump", "Pain when lifting", "Discomfort", "Swelling"],
+        "treatment": "Surgery if severe."
+    },
+    {
+        "name": "Chronic Kidney Disease",
+        "severity": "Chronic",
+        "description": "Gradual loss of kidney function over time.",
+        "symptoms": ["Swelling", "Fatigue", "Nausea", "Urination changes"],
+        "treatment": "Dialysis, medications, kidney transplant."
+    },
+    {
+        "name": "Liver Cirrhosis",
+        "severity": "Chronic",
+        "description": "Severe scarring of the liver caused by long-term damage.",
+        "symptoms": ["Fatigue", "Jaundice", "Swelling in abdomen", "Easy bruising"],
+        "treatment": "Lifestyle changes, medications, liver transplant if severe."
+    },
+    {
+        "name": "Ebola",
+        "severity": "Acute",
+        "description": "A viral hemorrhagic fever with high fatality rate.",
+        "symptoms": ["High fever", "Bleeding", "Weakness", "Vomiting"],
+        "treatment": "Supportive care, experimental antivirals, rehydration."
+    },
+    {
+        "name": "Zika Virus",
+        "severity": "Acute",
+        "description": "A mosquito-borne virus linked to birth defects.",
+        "symptoms": ["Fever", "Rash", "Joint pain", "Conjunctivitis"],
+        "treatment": "Rest, hydration, pain relievers."
+    },
+    {
+        "name": "E. coli Infection",
+        "severity": "Acute",
+        "description": "A bacterial infection that can cause severe food poisoning.",
+        "symptoms": ["Diarrhea", "Abdominal cramps", "Nausea", "Fever"],
+        "treatment": "Hydration, rest, antibiotics if severe."
+    },
+    {
+        "name": "Salmonella Infection",
+        "severity": "Acute",
+        "description": "A bacterial foodborne illness.",
+        "symptoms": ["Diarrhea", "Fever", "Abdominal pain", "Vomiting"],
+        "treatment": "Hydration, rest, antibiotics if needed."
+    },
+
+    {
+        "name": "Plague",
+        "severity": "Acute",
+        "description": "A serious infectious disease caused by Yersinia pestis, historically known as the Black Death.",
+        "symptoms": ["Fever", "Chills", "Swollen lymph nodes", "Weakness"],
+        "treatment": "Antibiotics and supportive care."
+    },
+    {
+        "name": "Typhus",
+        "severity": "Acute",
+        "description": "An infectious disease caused by Rickettsia bacteria, spread by lice or fleas.",
+        "symptoms": ["Fever", "Headache", "Rash", "Muscle pain"],
+        "treatment": "Antibiotics such as doxycycline."
+    },
+    {
+        "name": "Leprosy",
+        "severity": "Chronic",
+        "description": "A long-term infection caused by Mycobacterium leprae, affecting skin and nerves.",
+        "symptoms": ["Skin lesions", "Numbness", "Weakness", "Eye problems"],
+        "treatment": "Multi-drug antibiotic therapy."
+    },
+    {
+        "name": "Mumps",
+        "severity": "Acute",
+        "description": "A viral infection that affects the salivary glands.",
+        "symptoms": ["Swollen cheeks", "Fever", "Headache", "Muscle aches"],
+        "treatment": "Rest, fluids, and pain relievers."
+    },
+    {
+        "name": "Rubella",
+        "severity": "Acute",
+        "description": "Also known as German measles, a viral infection with mild fever and rash.",
+        "symptoms": ["Mild rash", "Fever", "Swollen lymph nodes", "Joint pain"],
+        "treatment": "Supportive care and vaccination prevention."
+    },
+    {
+        "name": "Poliomyelitis",
+        "severity": "Acute",
+        "description": "A viral disease that may cause paralysis by infecting the spinal cord.",
+        "symptoms": ["Fever", "Sore throat", "Muscle weakness", "Paralysis"],
+        "treatment": "Supportive therapy; prevented by polio vaccine."
+    },
+    {
+        "name": "Cholera",
+        "severity": "Acute",
+        "description": "An infectious disease caused by Vibrio cholerae leading to severe diarrhea.",
+        "symptoms": ["Watery diarrhea", "Dehydration", "Vomiting", "Cramps"],
+        "treatment": "Rehydration therapy and antibiotics."
+    },
+    {
+        "name": "Dengue Fever",
+        "severity": "Acute",
+        "description": "A mosquito-borne viral disease causing high fever and joint pain.",
+        "symptoms": ["Fever", "Headache", "Joint pain", "Skin rash"],
+        "treatment": "Fluids, rest, and pain relievers (avoid aspirin)."
+    },
+    {
+        "name": "Zika Virus",
+        "severity": "Acute",
+        "description": "A mosquito-borne viral disease that can cause birth defects.",
+        "symptoms": ["Fever", "Rash", "Joint pain", "Conjunctivitis"],
+        "treatment": "Supportive care with rest and fluids."
+    },
+    {
+        "name": "Ebola Virus Disease",
+        "severity": "Acute",
+        "description": "A severe, often fatal disease caused by the Ebola virus.",
+        "symptoms": ["Fever", "Vomiting", "Bleeding", "Weakness"],
+        "treatment": "Supportive care, rehydration, and experimental therapies."
+    },
+    {
+        "name": "Marburg Virus Disease",
+        "severity": "Acute",
+        "description": "A severe hemorrhagic fever similar to Ebola.",
+        "symptoms": ["High fever", "Bleeding", "Organ failure", "Weakness"],
+        "treatment": "Supportive care and experimental treatments."
+    },
+    {
+        "name": "Tetanus",
+        "severity": "Acute",
+        "description": "A bacterial disease causing muscle stiffness and spasms.",
+        "symptoms": ["Jaw stiffness", "Muscle spasms", "Difficulty swallowing", "Seizures"],
+        "treatment": "Antitoxin, antibiotics, and supportive care."
+    },
+    {
+        "name": "Whooping Cough",
+        "severity": "Acute",
+        "description": "A contagious bacterial infection causing violent coughing fits.",
+        "symptoms": ["Severe cough", "Vomiting", "Fatigue", "Runny nose"],
+        "treatment": "Antibiotics and supportive care."
+    },
+    {
+        "name": "Scarlet Fever",
+        "severity": "Acute",
+        "description": "A bacterial illness following strep throat, causing a red rash.",
+        "symptoms": ["Rash", "Sore throat", "Fever", "Strawberry tongue"],
+        "treatment": "Antibiotics."
+    },
+    {
+        "name": "Legionnaires' Disease",
+        "severity": "Acute",
+        "description": "A severe form of pneumonia caused by Legionella bacteria.",
+        "symptoms": ["Cough", "Shortness of breath", "Fever", "Muscle aches"],
+        "treatment": "Antibiotics."
+    },
+    {
+        "name": "Yellow Fever",
+        "severity": "Acute",
+        "description": "A mosquito-borne viral infection causing jaundice and fever.",
+        "symptoms": ["Fever", "Jaundice", "Bleeding", "Muscle pain"],
+        "treatment": "Supportive care and vaccination prevention."
+    },
+    {
+        "name": "Sleeping Sickness",
+        "severity": "Chronic",
+        "description": "A parasitic disease caused by tsetse fly bites.",
+        "symptoms": ["Fever", "Confusion", "Sleep disturbances", "Headache"],
+        "treatment": "Antiparasitic drugs."
+    },
+    {
+        "name": "Giardiasis",
+        "severity": "Acute",
+        "description": "An intestinal infection caused by Giardia parasites.",
+        "symptoms": ["Diarrhea", "Abdominal cramps", "Nausea", "Bloating"],
+        "treatment": "Antiparasitic medications and fluids."
+    },
+    {
+        "name": "Cryptosporidiosis",
+        "severity": "Acute",
+        "description": "A parasitic infection of the intestines causing watery diarrhea.",
+        "symptoms": ["Watery diarrhea", "Nausea", "Cramps", "Dehydration"],
+        "treatment": "Fluids and antiparasitic medications."
+    },
+    {
+        "name": "Toxoplasmosis",
+        "severity": "Chronic",
+        "description": "An infection caused by the Toxoplasma gondii parasite.",
+        "symptoms": ["Flu-like symptoms", "Headache", "Confusion", "Seizures"],
+        "treatment": "Antiparasitic and antibiotic drugs."
+    },
+    {
+        "name": "Histoplasmosis",
+        "severity": "Chronic",
+        "description": "A fungal infection often affecting the lungs, caused by inhaling spores.",
+        "symptoms": ["Cough", "Fever", "Chest pain", "Fatigue"],
+        "treatment": "Antifungal medications."
+    },
+    {
+        "name": "Coccidioidomycosis",
+        "severity": "Chronic",
+        "description": "Also called Valley Fever, a fungal infection caused by inhaling spores.",
+        "symptoms": ["Cough", "Fever", "Chest pain", "Skin rash"],
+        "treatment": "Antifungal drugs."
+    },
+    {
+        "name": "Blastomycosis",
+        "severity": "Chronic",
+        "description": "A fungal infection that affects the lungs and skin.",
+        "symptoms": ["Cough", "Fever", "Skin lesions", "Chest pain"],
+        "treatment": "Antifungal therapy."
+    },
+    {
+        "name": "Onchocerciasis",
+        "severity": "Chronic",
+        "description": "Also called River Blindness, caused by a parasitic worm transmitted by blackflies.",
+        "symptoms": ["Skin itching", "Nodules", "Eye damage", "Vision loss"],
+        "treatment": "Ivermectin and supportive care."
+    },
+    {
+        "name": "Filariasis",
+        "severity": "Chronic",
+        "description": "A parasitic disease caused by thread-like filarial worms.",
+        "symptoms": ["Swelling", "Skin thickening", "Fever", "Pain"],
+        "treatment": "Antiparasitic medications."
+    },
+    {
+        "name": "Brucellosis",
+        "severity": "Chronic",
+        "description": "A bacterial infection transmitted from animals to humans.",
+        "symptoms": ["Fever", "Sweats", "Weakness", "Joint pain"],
+        "treatment": "Antibiotics for extended periods."
+    },
+    {
+        "name": "Tularemia",
+        "severity": "Acute",
+        "description": "A rare bacterial infection also known as rabbit fever.",
+        "symptoms": ["Fever", "Skin ulcers", "Swollen glands", "Cough"],
+        "treatment": "Antibiotics."
+    },
+    {
+        "name": "Q Fever",
+        "severity": "Acute",
+        "description": "A bacterial disease caused by Coxiella burnetii.",
+        "symptoms": ["Fever", "Cough", "Headache", "Fatigue"],
+        "treatment": "Antibiotics such as doxycycline."
+    },
+    {
+        "name": "Rocky Mountain Spotted Fever",
+        "severity": "Acute",
+        "description": "A bacterial tick-borne illness causing fever and rash.",
+        "symptoms": ["Fever", "Headache", "Rash", "Muscle pain"],
+        "treatment": "Antibiotics (doxycycline)."
+    },
+    {
+        "name": "Lyme Disease",
+        "severity": "Chronic",
+        "description": "A tick-borne bacterial disease that can affect joints and nerves.",
+        "symptoms": ["Bull’s-eye rash", "Fever", "Joint pain", "Fatigue"],
+        "treatment": "Antibiotics."
+    },
+    {
+        "name": "Relapsing Fever",
+        "severity": "Acute",
+        "description": "A bacterial infection spread by lice or ticks causing recurring fevers.",
+        "symptoms": ["High fever", "Headache", "Muscle pain", "Chills"],
+        "treatment": "Antibiotics."
+    },
+    {
+        "name": "Chikungunya",
+        "severity": "Acute",
+        "description": "A mosquito-borne viral disease causing fever and joint pain.",
+        "symptoms": ["Fever", "Severe joint pain", "Rash", "Headache"],
+        "treatment": "Supportive care with rest and fluids."
+    },
+    {
+        "name": "Lassa Fever",
+        "severity": "Acute",
+        "description": "A viral hemorrhagic fever endemic in parts of West Africa.",
+        "symptoms": ["Fever", "Bleeding", "Hearing loss", "Weakness"],
+        "treatment": "Supportive care and antiviral drugs."
+    },
+    {
+        "name": "Crimean-Congo Hemorrhagic Fever",
+        "severity": "Acute",
+        "description": "A viral tick-borne disease causing severe bleeding.",
+        "symptoms": ["Fever", "Bleeding", "Muscle pain", "Vomiting"],
+        "treatment": "Supportive care and antiviral therapy."
+    },
+    {
+        "name": "Hantavirus Pulmonary Syndrome",
+        "severity": "Acute",
+        "description": "A severe respiratory disease caused by hantavirus infection.",
+        "symptoms": ["Fever", "Cough", "Shortness of breath", "Muscle aches"],
+        "treatment": "Supportive hospital care."
+    },
+    {
+        "name": "Nipah Virus Infection",
+        "severity": "Acute",
+        "description": "A zoonotic viral disease that can cause encephalitis.",
+        "symptoms": ["Fever", "Headache", "Confusion", "Seizures"],
+        "treatment": "Supportive care; experimental antivirals in development."
+    },
+    {
+        "name": "Rift Valley Fever",
+        "severity": "Acute",
+        "description": "A viral disease transmitted by mosquitoes affecting animals and humans.",
+        "symptoms": ["Fever", "Weakness", "Vision loss", "Bleeding"],
+        "treatment": "Supportive therapy."
+    }
+
+
+     ];
+
+        // Function to display suggestions
+        function showSuggestions() {
+            const query = document.getElementById('search').value.toLowerCase();
+            const suggestionsDiv = document.getElementById('suggestions');
+            const infoContainer = document.getElementById('info-container');
+            infoContainer.classList.remove('active');
+            infoContainer.innerHTML = "";
+            suggestionsDiv.innerHTML = "";
+
+            if (query.trim() === "") {
+                suggestionsDiv.style.display = "none";
+                return;
+            }
+
+            const suggestions = diseases.filter(disease =>
+                disease.name.toLowerCase().includes(query)
+            );
+
+            if (suggestions.length > 0) {
+                suggestions.forEach(disease => {
+                    const li = document.createElement('li');
+                    li.textContent = disease.name;
+                    li.onclick = () => displayInfo(disease.name);
+                    suggestionsDiv.appendChild(li);
+                });
+                suggestionsDiv.style.display = "block";
+            } else {
+                suggestionsDiv.style.display = "none";
+            }
+        }
+
+        // Function to display the disease information
+        function displayInfo(name) {
+            const infoContainer = document.getElementById('info-container');
+            const suggestionsDiv = document.getElementById('suggestions');
+            const disease = diseases.find(d => d.name === name);
+
+            if (disease) {
+                let infoContent = `
+                    <h2>${disease.name}</h2>
+                    <p class="severity">${disease.severity}</p>
+                    <p><b>Description:</b> ${disease.description}</p>
+                    <p><b>Symptoms:</b> ${disease.symptoms.join(", ")}</p>
+                    <p><b>Treatment:</b> ${disease.treatment}</p>
+                `;
+                infoContainer.innerHTML = infoContent;
+                infoContainer.classList.add('active');
+            }
+            suggestionsDiv.style.display = "none";
+        }
+
+        // Function to handle search button click
+        function handleSearch() {
+            const query = document.getElementById('search').value.toLowerCase();
+            if (query) {
+                showSuggestions();
+            } else {
+                alert("Please enter a disease name!");
+            }
+        }
+    </script>
+</body>
+</html>
